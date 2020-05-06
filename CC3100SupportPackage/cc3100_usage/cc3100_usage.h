@@ -18,9 +18,6 @@
 
 /* HTTP Client lib include */
 #include "httpcli.h"
-
-/* JSON Parser include */
-#include "jsmn.h"
 /********************** Includes *********************/
 
 /*
@@ -91,18 +88,12 @@ Winter: 1 time a week for a total of 0.5 to 1.0 inches per week
 /**************************** Defines ******************************/
 
 
-/**************************** GLOBAL VARIABLES ******************************/
-
-
-/**************************** GLOBAL VARIABLES ******************************/
-
 
 /*********************** User Functions ************************/
 void initCC3100();
 _u32 getLocalIP();
 _i32 ConnectToHTTPServer(HTTPCli_Handle httpClient_h, char* hostName, uint16_t hostPort);
 _i32 GetDataFromHTTPServer(HTTPCli_Handle httpClient_h, char* hostName, char* URI, char** dataPtr);
-_i32 ParseJSONData(_i8 *ptr);
 /*********************** User Functions ************************/
 
 

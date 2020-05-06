@@ -45,8 +45,6 @@ CC3100SupportPackage/cc3100_usage/cc3100_usage.obj: D:/CCS/ccs/tools/compiler/ti
 CC3100SupportPackage/cc3100_usage/cc3100_usage.obj: D:/UF_HW/2020_spring_hw/EEL4930/Lab/Code/Smart_Irrigation_Controller/CC3100SupportPackage/http_client/httpstd.h
 CC3100SupportPackage/cc3100_usage/cc3100_usage.obj: D:/UF_HW/2020_spring_hw/EEL4930/Lab/Code/Smart_Irrigation_Controller/CC3100SupportPackage/http_client/network.h
 CC3100SupportPackage/cc3100_usage/cc3100_usage.obj: D:/UF_HW/2020_spring_hw/EEL4930/Lab/Code/Smart_Irrigation_Controller/CC3100SupportPackage/http_client/ssock.h
-CC3100SupportPackage/cc3100_usage/cc3100_usage.obj: D:/UF_HW/2020_spring_hw/EEL4930/Lab/Code/Smart_Irrigation_Controller/CC3100SupportPackage/json/jsmn.h
-CC3100SupportPackage/cc3100_usage/cc3100_usage.obj: D:/CCS/ccs/tools/compiler/ti-cgt-arm_18.12.2.LTS/include/stddef.h
 
 ../CC3100SupportPackage/cc3100_usage/cc3100_usage.c: 
 ../CC3100SupportPackage/cc3100_usage/cc3100_usage.h: 
@@ -93,5 +91,3 @@ D:/CCS/ccs/tools/compiler/ti-cgt-arm_18.12.2.LTS/include/stdbool.h:
 D:/UF_HW/2020_spring_hw/EEL4930/Lab/Code/Smart_Irrigation_Controller/CC3100SupportPackage/http_client/httpstd.h: 
 D:/UF_HW/2020_spring_hw/EEL4930/Lab/Code/Smart_Irrigation_Controller/CC3100SupportPackage/http_client/network.h: 
 D:/UF_HW/2020_spring_hw/EEL4930/Lab/Code/Smart_Irrigation_Controller/CC3100SupportPackage/http_client/ssock.h: 
-D:/UF_HW/2020_spring_hw/EEL4930/Lab/Code/Smart_Irrigation_Controller/CC3100SupportPackage/json/jsmn.h: 
-D:/CCS/ccs/tools/compiler/ti-cgt-arm_18.12.2.LTS/include/stddef.h: 

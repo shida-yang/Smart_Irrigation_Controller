@@ -1,5 +1,7 @@
 #include "cc3100_usage.h"
 
+
+/**************************** GLOBAL VARIABLES ******************************/
 _u8 g_Status = 0;
 _u32 g_DestinationIP;
 _u32 g_BytesReceived;
@@ -12,6 +14,9 @@ uint32_t receivedAlready = 0;
 uint32_t transmitedAlready = 0;
 _i16          SockIDRx = 0;
 _i16          SockIDTx = 0;
+/**************************** GLOBAL VARIABLES ******************************/
+
+
 
 /****************************************** STATIC FUNCTIONS *********************************************/
 /*!
@@ -502,67 +507,6 @@ _i32 ConnectToHTTPServer(HTTPCli_Handle httpClient_h, char* hostName, uint16_t h
 
     //CLI_Write(" Successfully connected to the server \r\n");
     return SUCCESS;
-}
-
-
-/*!
-    \brief This function parse JSON data
-
-    \param[in]      ptr - Pointer to JSON data
-
-    \return         0 on success else -ve
-
-    \note
-
-    \warning
-*/
-_i32 ParseJSONData(_i8 *ptr)
-{
-    _i32            retVal = 0;
-    _i32            noOfToken;
-    jsmn_parser     parser;
-    jsmntok_t       *tokenList;
-    _i8             printBuffer[4];
-
-    /* Initialize JSON PArser */
-    jsmn_init(&parser);
-
-    /* Get number of JSON token in stream as we we dont know how many tokens need to pass */
-    noOfToken = jsmn_parse(&parser, (const char *)ptr, strlen((const char *)ptr), NULL, 10);
-    if(noOfToken <= 0)
-    {
-        //CLI_Write(" Failed to initialize JSON parser\n\r");
-        return -1;
-
-    }
-
-    /* Allocate memory to store token */
-    tokenList = (jsmntok_t *) malloc(noOfToken*sizeof(jsmntok_t));
-    if(tokenList == NULL)
-    {
-        //CLI_Write(" Failed to allocate memory\n\r");
-        return -1;
-    }
-
-    /* Initialize JSON Parser again */
-    jsmn_init(&parser);
-    noOfToken = jsmn_parse(&parser, (const char *)ptr, strlen((const char *)ptr), tokenList, noOfToken);
-    if(noOfToken < 0)
-    {
-        //CLI_Write(" Failed to parse JSON tokens\n\r");
-        retVal = noOfToken;
-    }
-    else
-    {
-        //CLI_Write(" Successfully parsed ");
-        sprintf((char *)printBuffer, "%ld", noOfToken);
-        //CLI_Write((_u8 *)printBuffer);
-        //CLI_Write(" JSON tokens\n\r");
-    }
-
-    free(tokenList);
-
-    return retVal;
 }
 /****************************************** PUBLIC FUNCTIONS *********************************************/
 
