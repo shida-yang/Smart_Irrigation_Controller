@@ -69,10 +69,10 @@ typedef enum{
 #define NOTHING_RECEIVED -1
 
 /* HTTP */
-#define GET_REQUEST_URI        "/data/2.5/onecall?lat=28.141131&lon=-82.315402&exclude=current,hourly&appid=b8a32c20f2c5d78f18ae6d4d6fcf681a"
-
-#define HOST_NAME              "api.openweathermap.org"  
-#define HOST_PORT              80
+typedef enum{
+    JSON=0,
+    OTHERS
+} HTTPCli_CONTENT_TYPE_t;
 
 #define MAX_BUFF_SIZE   4096
 
@@ -92,31 +92,24 @@ Winter: 1 time a week for a total of 0.5 to 1.0 inches per week
 
 
 /**************************** GLOBAL VARIABLES ******************************/
-//_u32 g_Status;
-_u32 g_DestinationIP;
-_u32 g_BytesReceived; /* variable to store the file size */
-_u8  g_buff[MAX_BUFF_SIZE+1];
 
-_i32 g_SockID = 0;
+
 /**************************** GLOBAL VARIABLES ******************************/
 
 
 /*********************** User Functions ************************/
-void initCC3100(playerType playerRole);
-/* HTTP */
-
-void connectToWeatherServer(HTTPCli_Handle httpClient);
-void getRainData(float* dataArray);
+void initCC3100();
+_u32 getLocalIP();
+_i32 ConnectToHTTPServer(HTTPCli_Handle httpClient_h, char* hostName, uint16_t hostPort);
+_i32 GetDataFromHTTPServer(HTTPCli_Handle httpClient_h, char* hostName, char* URI, char** dataPtr);
+_i32 ParseJSONData(_i8 *ptr);
 /*********************** User Functions ************************/
 
 
 /*********************** HTTP Functions ************************/
 static _i32 initializeAppVariables();
-static _i32 ConnectToHTTPServer(HTTPCli_Handle httpClient);
-static _i32 HTTPGetMethod(HTTPCli_Handle httpClient);
-static _i32 readResponse(HTTPCli_Handle httpClient, float* dataArray);
-static void FlushHTTPResponse(HTTPCli_Handle httpClient);
-static _i32 ParseJSONData(_i8 *ptr);
+static _i32 readResponse(HTTPCli_Handle httpClient_h, char** dataPtr, HTTPCli_CONTENT_TYPE_t* contentType);
+static void FlushHTTPResponse(HTTPCli_Handle httpClient_h);
 /*********************** HTTP Functions ************************/
 
 

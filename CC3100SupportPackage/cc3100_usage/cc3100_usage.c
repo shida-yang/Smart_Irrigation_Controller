@@ -1,16 +1,17 @@
 #include "cc3100_usage.h"
 
-
-/****** GLOBAL VARIABLES ******/
 _u8 g_Status = 0;
+_u32 g_DestinationIP;
+_u32 g_BytesReceived;
+_u8  g_buff[MAX_BUFF_SIZE+1];
+_i32 g_SockID = 0;
+
 _i32 retVal = 0;
 static volatile uint32_t localIP;
 uint32_t receivedAlready = 0;
 uint32_t transmitedAlready = 0;
 _i16          SockIDRx = 0;
 _i16          SockIDTx = 0;
-/****** GLOBAL VARIABLES ******/
-
 
 /****************************************** STATIC FUNCTIONS *********************************************/
 /*!
@@ -297,6 +298,9 @@ static _i32 configureSimpleLinkToDefaultState()
     //    retVal = sl_Stop(SL_STOP_TIMEOUT);
     //    ASSERT_ON_ERROR(retVal);
 
+    retVal = initializeAppVariables();
+    ASSERT_ON_ERROR(retVal);
+
     g_Status = 0;
     return SUCCESS;
 }
@@ -348,7 +352,7 @@ static _i32 establishConnectionWithAP()
  *
  * Takes in BUF SIZE for packet - size of player struct
  */
-void initCC3100(playerType playerRole)
+void initCC3100()
 {
 //    asm("   CPSIE   I ");
     _i32 retVal = -1;
@@ -410,36 +414,14 @@ _u32 getLocalIP()
     return localIP;
 }
 
-/* 
- * Connect to weather server 
- */
-void connectToWeatherServer(HTTPCli_Handle httpClient){
-    _i32            retVal = -1;
-
-    retVal = initializeAppVariables();
-    ASSERT_ON_ERROR(retVal);
-
-    /* Connect to HTTP server */
-    retVal = ConnectToHTTPServer(httpClient);
-//    if(retVal < 0)
-//    {
-//      LOOP_FOREVER();
-//    }
-}
-
-
 /*
  * 
  */
-void getRainData(float* dataArray){
-    HTTPCli_Struct     httpClient;
-
-    connectToWeatherServer(&httpClient);
-
+_i32 GetDataFromHTTPServer(HTTPCli_Handle httpClient_h, char* hostName, char* URI, char** dataPtr){
     _i32             retVal = 0;
     bool             moreFlags;
     const HTTPCli_Field    fields[4] = {
-                                    {HTTPCli_FIELD_NAME_HOST, HOST_NAME},
+                                    {HTTPCli_FIELD_NAME_HOST, hostName},
                                     {HTTPCli_FIELD_NAME_ACCEPT, "*/*"},
                                     {HTTPCli_FIELD_NAME_CONTENT_LENGTH, "0"},
                                     {NULL, NULL}
@@ -447,7 +429,7 @@ void getRainData(float* dataArray){
 
 
     /* Set request header fields to be send for HTTP request. */
-    HTTPCli_setRequestFields(&httpClient, fields);
+    HTTPCli_setRequestFields(httpClient_h, fields);
 
     /* Send GET method request. */
     /* Here we are setting moreFlags = 0 as there are no more header fields need to send
@@ -455,18 +437,133 @@ void getRainData(float* dataArray){
        for more information.
     */
     moreFlags = 0;
-    retVal = HTTPCli_sendRequest(&httpClient, HTTPCli_METHOD_GET, GET_REQUEST_URI, moreFlags);
+    retVal = HTTPCli_sendRequest(httpClient_h, HTTPCli_METHOD_GET, URI, moreFlags);
     if(retVal < 0)
     {
         ////CLI_Write(" Failed to send HTTP GET request.\n\r");
-        LOOP_FOREVER();
         return retVal;
     }
 
-    retVal = readResponse(&httpClient, NULL);
+    HTTPCli_CONTENT_TYPE_t contentType;
+    retVal = readResponse(httpClient_h, dataPtr, &contentType);
+
+    return retVal;
 
 }
 
+
+/*!
+    \brief This function establish a HTTP connection
+
+    \param[in]      httpClient - HTTP Client object
+
+    \return         0 on success else -ve
+
+    \note
+
+    \warning
+*/
+_i32 ConnectToHTTPServer(HTTPCli_Handle httpClient_h, char* hostName, uint16_t hostPort)
+{
+    _i32                retVal = -1;
+    struct sockaddr_in     addr;
+
+#ifdef USE_PROXY
+    struct sockaddr_in     paddr;
+
+    paddr.sin_family = AF_INET;
+    paddr.sin_port = htons(PROXY_PORT);
+    paddr.sin_addr.s_addr = sl_Htonl(PROXY_IP);
+    HTTPCli_setProxy((struct sockaddr *)&paddr);
+#endif
+
+     /* Resolve HOST NAME/IP */
+    retVal = sl_NetAppDnsGetHostByName(hostName, pal_Strlen(hostName),
+                                       &g_DestinationIP, SL_AF_INET);
+    if(retVal < 0)
+    {
+        //CLI_Write(" Device couldn't get the IP for the host-name\r\n");
+        ASSERT_ON_ERROR(retVal);
+    }
+
+    /* Set up the input parameters for HTTP Connection */
+    addr.sin_family = AF_INET;
+    addr.sin_port = htons(hostPort);
+    addr.sin_addr.s_addr = sl_Htonl(g_DestinationIP);
+
+    /* HTTPCli open call: handle, address params only */
+    HTTPCli_construct(httpClient_h);
+    retVal = HTTPCli_connect(httpClient_h, (struct sockaddr *)&addr, 0, NULL);
+    if (retVal < 0)
+    {
+        //CLI_Write("Connection to server failed\n\r");
+        ASSERT_ON_ERROR(retVal);
+    }
+
+    //CLI_Write(" Successfully connected to the server \r\n");
+    return SUCCESS;
+}
+
+
+/*!
+    \brief This function parse JSON data
+
+    \param[in]      ptr - Pointer to JSON data
+
+    \return         0 on success else -ve
+
+    \note
+
+    \warning
+*/
+_i32 ParseJSONData(_i8 *ptr)
+{
+    _i32            retVal = 0;
+    _i32            noOfToken;
+    jsmn_parser     parser;
+    jsmntok_t       *tokenList;
+    _i8             printBuffer[4];
+
+    /* Initialize JSON PArser */
+    jsmn_init(&parser);
+
+    /* Get number of JSON token in stream as we we dont know how many tokens need to pass */
+    noOfToken = jsmn_parse(&parser, (const char *)ptr, strlen((const char *)ptr), NULL, 10);
+    if(noOfToken <= 0)
+    {
+        //CLI_Write(" Failed to initialize JSON parser\n\r");
+        return -1;
+
+    }
+
+    /* Allocate memory to store token */
+    tokenList = (jsmntok_t *) malloc(noOfToken*sizeof(jsmntok_t));
+    if(tokenList == NULL)
+    {
+        //CLI_Write(" Failed to allocate memory\n\r");
+        return -1;
+    }
+
+    /* Initialize JSON Parser again */
+    jsmn_init(&parser);
+    noOfToken = jsmn_parse(&parser, (const char *)ptr, strlen((const char *)ptr), tokenList, noOfToken);
+    if(noOfToken < 0)
+    {
+        //CLI_Write(" Failed to parse JSON tokens\n\r");
+        retVal = noOfToken;
+    }
+    else
+    {
+        //CLI_Write(" Successfully parsed ");
+        sprintf((char *)printBuffer, "%ld", noOfToken);
+        //CLI_Write((_u8 *)printBuffer);
+        //CLI_Write(" JSON tokens\n\r");
+    }
+
+    free(tokenList);
+
+    return retVal;
+}
 /****************************************** PUBLIC FUNCTIONS *********************************************/
 
 
@@ -491,102 +588,6 @@ static _i32 initializeAppVariables()
     return SUCCESS;
 }
 
-/*!
-    \brief This function establish a HTTP connection
-
-    \param[in]      httpClient - HTTP Client object
-
-    \return         0 on success else -ve
-
-    \note
-
-    \warning
-*/
-static _i32 ConnectToHTTPServer(HTTPCli_Handle httpClient)
-{
-    _i32                retVal = -1;
-    struct sockaddr_in     addr;
-
-#ifdef USE_PROXY
-    struct sockaddr_in     paddr;
-
-    paddr.sin_family = AF_INET;
-    paddr.sin_port = htons(PROXY_PORT);
-    paddr.sin_addr.s_addr = sl_Htonl(PROXY_IP);
-    HTTPCli_setProxy((struct sockaddr *)&paddr);
-#endif
-
-     /* Resolve HOST NAME/IP */
-    retVal = sl_NetAppDnsGetHostByName(HOST_NAME, pal_Strlen(HOST_NAME),
-                                       &g_DestinationIP, SL_AF_INET);
-    if(retVal < 0)
-    {
-        //CLI_Write(" Device couldn't get the IP for the host-name\r\n");
-        ASSERT_ON_ERROR(retVal);
-    }
-
-    /* Set up the input parameters for HTTP Connection */
-    addr.sin_family = AF_INET;
-    addr.sin_port = htons(HOST_PORT);
-    addr.sin_addr.s_addr = sl_Htonl(g_DestinationIP);
-
-    /* HTTPCli open call: handle, address params only */
-    HTTPCli_construct(httpClient);
-    retVal = HTTPCli_connect(httpClient, (struct sockaddr *)&addr, 0, NULL);
-    if (retVal < 0)
-    {
-        //CLI_Write("Connection to server failed\n\r");
-        ASSERT_ON_ERROR(retVal);
-    }
-
-    //CLI_Write(" Successfully connected to the server \r\n");
-    return SUCCESS;
-}
-
-/*!
-    \brief This function demonstarte the HTTP GET method
-
-    \param[in]      httpClient - HTTP Client object
-
-    \return         0 on success else -ve
-
-    \note
-
-    \warning
-*/
-static _i32 HTTPGetMethod(HTTPCli_Handle httpClient)
-{
-    _i32             retVal = 0;
-    bool             moreFlags;
-    const HTTPCli_Field    fields[4] = {
-                                    {HTTPCli_FIELD_NAME_HOST, HOST_NAME},
-                                    {HTTPCli_FIELD_NAME_ACCEPT, "*/*"},
-                                    {HTTPCli_FIELD_NAME_CONTENT_LENGTH, "0"},
-                                    {NULL, NULL}
-                                };
-
-
-    /* Set request header fields to be send for HTTP request. */
-    HTTPCli_setRequestFields(httpClient, fields);
-
-    /* Send GET method request. */
-    /* Here we are setting moreFlags = 0 as there are no more header fields need to send
-       at later stage. Please refer HTTP Library API documentaion @ HTTPCli_sendRequest
-       for more information.
-    */
-    moreFlags = 0;
-    retVal = HTTPCli_sendRequest(httpClient, HTTPCli_METHOD_GET, GET_REQUEST_URI, moreFlags);
-    if(retVal < 0)
-    {
-        //CLI_Write(" Failed to send HTTP GET request.\n\r");
-        return retVal;
-    }
-
-
-    retVal = readResponse(httpClient, NULL);
-
-    return retVal;
-}
 
 /*!
     \brief This function read respose from server and dump on console
@@ -599,13 +600,12 @@ static _i32 HTTPGetMethod(HTTPCli_Handle httpClient)
 
     \warning
 */
-static _i32 readResponse(HTTPCli_Handle httpClient, float* dataArray)
+static _i32 readResponse(HTTPCli_Handle httpClient, char** dataPtr, HTTPCli_CONTENT_TYPE_t* contentType)
 {
 	_i32            retVal = 0;
 	_i32            bytesRead = 0;
 	_i32            id = 0;
 	_u32            len = 0;
-	_i32            json = 0;
 	_i8             *dataBuffer=NULL;
 	bool            moreFlags = 1;
 	const _i8       *ids[4] = {
@@ -650,6 +650,9 @@ static _i32 readResponse(HTTPCli_Handle httpClient, float* dataArray)
 				case 0: /* HTTPCli_FIELD_NAME_CONTENT_LENGTH */
 				{
 					len = strtoul((char *)g_buff, NULL, 0);
+					if(len > MAX_BUFF_SIZE){
+					    len = MAX_BUFF_SIZE;
+					}
 				}
 				break;
 				case 1: /* HTTPCli_FIELD_NAME_CONNECTION */
@@ -658,11 +661,10 @@ static _i32 readResponse(HTTPCli_Handle httpClient, float* dataArray)
 				break;
 				case 2: /* HTTPCli_FIELD_NAME_CONTENT_TYPE */
 				{
-				    // TODO
 					if(strncmp((const char *)g_buff, "application/json",
 							sizeof("application/json")))
 					{
-						json = 1;
+						*contentType = JSON;
 					}
 					else
 					{
@@ -671,7 +673,7 @@ static _i32 readResponse(HTTPCli_Handle httpClient, float* dataArray)
                                 content handler. In this example all content
                                 type other than json are treated as plain text.
 						 */
-						json = 0;
+					    *contentType = OTHERS;
 					}
 					//CLI_Write(" ");
 					//CLI_Write(HTTPCli_FIELD_NAME_CONTENT_TYPE);
@@ -683,67 +685,40 @@ static _i32 readResponse(HTTPCli_Handle httpClient, float* dataArray)
 				{
 					//CLI_Write(" Wrong filter id\n\r");
 					retVal = -1;
-					goto end;
 				}
 				}
-			}
-			bytesRead = 0;
-			if(len > sizeof(g_buff))
-			{
-				dataBuffer = (_i8 *) malloc(len);
-				// TODO
-				if(!dataBuffer)
-				{
-					//CLI_Write(" Failed to allocate memory\n\r");
-					retVal = -1;
-					goto end;
-				}
-			}
-			else
-			{
-				dataBuffer = (_i8 *)g_buff;
 			}
 
+//			// Allocate larger memory to store data if g_buff is too small
+//			bytesRead = 0;
+//			if(len > sizeof(g_buff))
+//			{
+//				dataBuffer = (_i8 *) malloc(len);
+//				if(!dataBuffer)
+//				{
+//					//CLI_Write(" Failed to allocate memory\n\r");
+//					retVal = -1;
+//					goto end;
+//				}
+//			}
+//			else
+//			{
+//				dataBuffer = (_i8 *)g_buff;
+//			}
+
+			dataBuffer = (_i8 *)g_buff;
+
 			/* Read response data/body */
-			/* Note:
-                    moreFlag will be set to 1 by HTTPCli_readResponseBody() call, if more
-		            data is available Or in other words content length > length of buffer.
-		            The remaining data will be read in subsequent call to HTTPCli_readResponseBody().
-		            Please refer HTTP Client Libary API documenation @ref HTTPCli_readResponseBody
-		            for more information
-			 	 	
-			 */
 			bytesRead = HTTPCli_readResponseBody(httpClient, (char *)dataBuffer, len, &moreFlags);
 			if(bytesRead < 0)
 			{
 				//CLI_Write(" Failed to received response body\n\r");
 				retVal = bytesRead;
-				goto end;
-			}
-			else if( bytesRead < len || moreFlags)
-			{
-				//CLI_Write(" Mismatch in content length and received data length\n\r");
-				goto end;
+				return retVal;
 			}
 			dataBuffer[bytesRead] = '\0';
 
-			if(json)
-			{
-				/* Parse JSON data */
-				retVal = ParseJSONData(dataBuffer);
-
-                /* Retrieve rain data */
-                // dataArray[];
-
-				if(retVal < 0)
-				{
-					goto end;
-				}
-			}
-			else
-			{
-				/* treating data as a plain text */
-			}
+			*dataPtr=dataBuffer;
 
 		}
 		break;
@@ -757,6 +732,8 @@ static _i32 readResponse(HTTPCli_Handle httpClient, float* dataArray)
                     In this example we are flushing response body in default
                     case for all other than 200 HTTP Status code.
 			 */
+		    FlushHTTPResponse(httpClient);
+		    break;
 		default:
 			/* Note:
               Need to flush received buffer explicitly as library will not do
@@ -769,17 +746,9 @@ static _i32 readResponse(HTTPCli_Handle httpClient, float* dataArray)
 	}
 	else
 	{
-		//CLI_Write(" Failed to receive data from server.\r\n");
-		goto end;
+		return -1;
 	}
 
-	retVal = 0;
-
-end:
-    if(len > sizeof(g_buff) && (dataBuffer != NULL))
-	{
-	    free(dataBuffer);
-    }
     return retVal;
 }
 
@@ -850,66 +819,6 @@ static void FlushHTTPResponse(HTTPCli_Handle httpClient)
             break;
         }
     }
-}
-
-/*!
-    \brief This function parse JSON data
-
-    \param[in]      ptr - Pointer to JSON data
-
-    \return         0 on success else -ve
-
-    \note
-
-    \warning
-*/
-static _i32 ParseJSONData(_i8 *ptr)
-{
-	_i32			retVal = 0;
-    _i32            noOfToken;
-    jsmn_parser     parser;
-    jsmntok_t       *tokenList;
-    _i8             printBuffer[4];
-
-    /* Initialize JSON PArser */
-    jsmn_init(&parser);
-
-    /* Get number of JSON token in stream as we we dont know how many tokens need to pass */
-    noOfToken = jsmn_parse(&parser, (const char *)ptr, strlen((const char *)ptr), NULL, 10);
-    if(noOfToken <= 0)
-    {
-    	//CLI_Write(" Failed to initialize JSON parser\n\r");
-    	return -1;
-
-    }
-
-    /* Allocate memory to store token */
-    tokenList = (jsmntok_t *) malloc(noOfToken*sizeof(jsmntok_t));
-    if(tokenList == NULL)
-    {
-        //CLI_Write(" Failed to allocate memory\n\r");
-        return -1;
-    }
-
-    /* Initialize JSON Parser again */
-    jsmn_init(&parser);
-    noOfToken = jsmn_parse(&parser, (const char *)ptr, strlen((const char *)ptr), tokenList, noOfToken);
-    if(noOfToken < 0)
-    {
-    	//CLI_Write(" Failed to parse JSON tokens\n\r");
-    	retVal = noOfToken;
-    }
-    else
-    {
-    	//CLI_Write(" Successfully parsed ");
-    	sprintf((char *)printBuffer, "%ld", noOfToken);
-    	//CLI_Write((_u8 *)printBuffer);
-    	//CLI_Write(" JSON tokens\n\r");
-    }
-
-    free(tokenList);
-
-    return retVal;
 }
 /*********************** HTTP Functions ************************/
 

@@ -11,31 +11,37 @@ CMD_SRCS += \
 C_SRCS += \
 ../main.c \
 ../startup_msp432p401r_ccs.c \
-../system_msp432p401r.c 
+../system_msp432p401r.c \
+../weatherServer.c 
 
 C_DEPS += \
 ./main.d \
 ./startup_msp432p401r_ccs.d \
-./system_msp432p401r.d 
+./system_msp432p401r.d \
+./weatherServer.d 
 
 OBJS += \
 ./main.obj \
 ./startup_msp432p401r_ccs.obj \
-./system_msp432p401r.obj 
+./system_msp432p401r.obj \
+./weatherServer.obj 
 
 OBJS__QUOTED += \
 "main.obj" \
 "startup_msp432p401r_ccs.obj" \
-"system_msp432p401r.obj" 
+"system_msp432p401r.obj" \
+"weatherServer.obj" 
 
 C_DEPS__QUOTED += \
 "main.d" \
 "startup_msp432p401r_ccs.d" \
-"system_msp432p401r.d" 
+"system_msp432p401r.d" \
+"weatherServer.d" 
 
 C_SRCS__QUOTED += \
 "../main.c" \
 "../startup_msp432p401r_ccs.c" \
-"../system_msp432p401r.c" 
+"../system_msp432p401r.c" \
+"../weatherServer.c" 
 
 
