@@ -40,7 +40,7 @@
 /* Configurable lengths */
 #define CONTENT_BUFLEN 128
 #define URI_BUFLEN 128
-#define SEND_BUFLEN 128
+#define SEND_BUFLEN 256
 #define MAX_FIELD_NAME_LEN 24
 
 #define STATUS_BUFLEN 16
