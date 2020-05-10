@@ -17,7 +17,7 @@ typedef enum{
 
 #define MAX_WEATHER_TEXT_LEN 16
 typedef struct dailyWeatherData{
-    uint8_t month;
+    uint8_t month;  //1=Jan, 2=Feb, ..., 12=Dec
     uint8_t day;
     float max_temp;
     float min_temp;
@@ -26,6 +26,7 @@ typedef struct dailyWeatherData{
 } dailyWeatherData_t;
 
 #define SECONDS_IN_A_DAY       86400
+#define TIME_ZONE_OFFSET       (-4*3600)
 #define HOST_NAME              "api.openweathermap.org"
 #define HOST_PORT              80
 #define GET_FORECAST_URI        "/data/2.5/onecall?lat=28.141131&lon=-82.315402&exclude=minutely,current,hourly&appid=b8a32c20f2c5d78f18ae6d4d6fcf681a"

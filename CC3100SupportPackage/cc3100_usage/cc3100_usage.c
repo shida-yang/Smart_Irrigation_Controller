@@ -552,6 +552,7 @@ static _i32 readResponse(HTTPCli_Handle httpClient, char** dataPtr, HTTPCli_CONT
 	_u32            len = 0;
 	_i8             *dataBuffer=NULL;
 	bool            moreFlags = 1;
+	bool            tooLong=0;
 	const _i8       *ids[4] = {
                                 HTTPCli_FIELD_NAME_CONTENT_LENGTH,
 			                    HTTPCli_FIELD_NAME_CONNECTION,
@@ -596,6 +597,7 @@ static _i32 readResponse(HTTPCli_Handle httpClient, char** dataPtr, HTTPCli_CONT
 					len = strtoul((char *)g_buff, NULL, 0);
 					if(len > MAX_BUFF_SIZE){
 					    len = MAX_BUFF_SIZE;
+					    tooLong = 1;
 					}
 				}
 				break;
@@ -664,6 +666,36 @@ static _i32 readResponse(HTTPCli_Handle httpClient, char** dataPtr, HTTPCli_CONT
 
 			*dataPtr=dataBuffer;
 
+		}
+
+		// Flush HTTP Response Body
+		if(tooLong){
+		    while(1)
+		    {
+		        _i8             buf[128];
+		        _i32            len = 1;
+		        bool            moreFlag = 0;
+
+		        /* Read response data/body */
+		        /* Note:
+		                moreFlag will be set to 1 by HTTPCli_readResponseBody() call, if more
+		                data is available Or in other words content length > length of buffer.
+		                The remaining data will be read in subsequent call to HTTPCli_readResponseBody().
+		                Please refer HTTP Client Libary API documenation @ref HTTPCli_readResponseBody
+		                for more information.
+		        */
+		        HTTPCli_readResponseBody(httpClient, (char *)buf, sizeof(buf) - 1, &moreFlag);
+
+		        if ((len - 2) >= 0 && buf[len - 2] == '\r' && buf [len - 1] == '\n')
+		        {
+		        }
+
+		        if(!moreFlag)
+		        {
+		            /* There no more data. break the loop. */
+		            break;
+		        }
+		    }
 		}
 		break;
 

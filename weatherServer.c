@@ -95,7 +95,7 @@ bool isRain(char* weather){
 void fillInWeekWeatherData(){
     char* tempPtr1;
     char* tempPtr2;
-    uint32_t dt, currDt;
+    __time64_t dt, currDt;
     float max_temp, min_temp, rain_depth;
     char weather[MAX_WEATHER_TEXT_LEN];
 
@@ -111,9 +111,17 @@ void fillInWeekWeatherData(){
         dt = atoi(tempPtr1);
         *tempPtr2 = ',';
 
+        dt = dt + TIME_ZONE_OFFSET;
+
         if(i == 3){
             currDt = dt;
         }
+
+        struct tm ts;
+        ts = *localtime(&dt);
+
+        weekWeatherData[i].day = ts.tm_mday;
+        weekWeatherData[i].month = ts.tm_mon + 1;   //because Jan is 0
 
 
         //..."min":293,
@@ -132,6 +140,9 @@ void fillInWeekWeatherData(){
         max_temp = strtof(tempPtr1, NULL);
         *tempPtr2 = ',';
 
+        weekWeatherData[i].max_temp = max_temp;
+        weekWeatherData[i].min_temp = min_temp;
+
 
         //..."main":"Clear",...
         tempPtr1 = strstr(tempPtr2, "\"main\"");
@@ -140,6 +151,8 @@ void fillInWeekWeatherData(){
         *tempPtr2 = '\0';
         strncpy(weather, tempPtr1, MAX_WEATHER_TEXT_LEN);
         *tempPtr2 = '\"';
+
+        strncpy(weekWeatherData[i].weather, weather, MAX_WEATHER_TEXT_LEN);
 
 
         if(isRain(weather)){
@@ -154,6 +167,9 @@ void fillInWeekWeatherData(){
         else{
             rain_depth = 0;
         }
+
+        weekWeatherData[i].rain_depth = rain_depth;
+
     }
 
 
@@ -161,6 +177,64 @@ void fillInWeekWeatherData(){
     generatePrevThreeDaysDT(currDt, prevDTs);
 
     for(int i=0; i<=2; i++){
+        rawJSON = getRawHistoricalWeatherJSON(prevDTs[i]);
+        tempPtr2 = rawJSON;
+
+        //..."dt":1588957200,...
+        tempPtr1 = strstr(tempPtr2, "\"dt\"");
+        tempPtr1 += 5;
+        tempPtr2 = strstr(tempPtr1, ",");
+        *tempPtr2 = '\0';
+        dt = atoi(tempPtr1);
+        *tempPtr2 = ',';
+
+        dt = dt + TIME_ZONE_OFFSET;
+
+        struct tm ts;
+        ts = *localtime(&dt);
+
+        weekWeatherData[i].day = ts.tm_mday;
+        weekWeatherData[i].month = ts.tm_mon + 1;   //because Jan is 0
+
+
+        //..."temp":288.05,...
+        tempPtr1 = strstr(tempPtr2, "\"temp\"");
+        tempPtr1 += 7;
+        tempPtr2 = strstr(tempPtr1, ",");
+        *tempPtr2 = '\0';
+        min_temp = strtof(tempPtr1, NULL);
+        max_temp = min_temp;
+        *tempPtr2 = ',';
+
+        weekWeatherData[i].max_temp = max_temp;
+        weekWeatherData[i].min_temp = min_temp;
+
+
+        //..."main":"Clear",...
+        tempPtr1 = strstr(tempPtr2, "\"main\"");
+        tempPtr1 += 8;
+        tempPtr2 = strstr(tempPtr1, "\"");
+        *tempPtr2 = '\0';
+        strncpy(weather, tempPtr1, MAX_WEATHER_TEXT_LEN);
+        *tempPtr2 = '\"';
+
+        strncpy(weekWeatherData[i].weather, weather, MAX_WEATHER_TEXT_LEN);
+
+        // TODO - check historical rain format
+        if(isRain(weather)){
+            //..."rain":3.44,...
+            tempPtr1 = strstr(tempPtr2, "\"rain\"");
+            tempPtr1 += 7;
+            tempPtr2 = strstr(tempPtr1, ",");
+            *tempPtr2 = '\0';
+            rain_depth = strtof(tempPtr1, NULL);
+            *tempPtr2 = ',';
+        }
+        else{
+            rain_depth = 0;
+        }
+
+        weekWeatherData[i].rain_depth = rain_depth;
 
     }
 }
