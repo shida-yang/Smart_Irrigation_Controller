@@ -140,8 +140,8 @@ void fillInWeekWeatherData(){
         max_temp = strtof(tempPtr1, NULL);
         *tempPtr2 = ',';
 
-        weekWeatherData[i].max_temp = max_temp;
-        weekWeatherData[i].min_temp = min_temp;
+        weekWeatherData[i].max_temp_f = max_temp;
+        weekWeatherData[i].min_temp_f = min_temp;
 
 
         //..."main":"Clear",...
@@ -206,8 +206,8 @@ void fillInWeekWeatherData(){
         max_temp = min_temp;
         *tempPtr2 = ',';
 
-        weekWeatherData[i].max_temp = max_temp;
-        weekWeatherData[i].min_temp = min_temp;
+        weekWeatherData[i].max_temp_f = max_temp;
+        weekWeatherData[i].min_temp_f = min_temp;
 
 
         //..."main":"Clear",...

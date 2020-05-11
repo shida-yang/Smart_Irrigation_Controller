@@ -98,6 +98,8 @@ main.obj: D:/CCS/ccs/tools/compiler/ti-cgt-arm_18.12.2.LTS/include/xlocale/_time
 main.obj: D:/CCS/ccs/tools/compiler/ti-cgt-arm_18.12.2.LTS/include/stdlib.h
 main.obj: D:/UF_HW/2020_spring_hw/EEL4930/Lab/Code/Smart_Irrigation_Controller/CC3100SupportPackage/json/jsmn.h
 main.obj: D:/CCS/ccs/tools/compiler/ti-cgt-arm_18.12.2.LTS/include/stddef.h
+main.obj: D:/UF_HW/2020_spring_hw/EEL4930/Lab/Code/Smart_Irrigation_Controller/GUI/inc/GUI.h
+main.obj: D:/UF_HW/2020_spring_hw/EEL4930/Lab/Code/Smart_Irrigation_Controller/GUI/inc/LCD_Button.h
 
 ../main.c: 
 D:/CCS/ccs/ccs_base/arm/include/msp.h: 
@@ -197,3 +199,5 @@ D:/CCS/ccs/tools/compiler/ti-cgt-arm_18.12.2.LTS/include/xlocale/_time.h:
 D:/CCS/ccs/tools/compiler/ti-cgt-arm_18.12.2.LTS/include/stdlib.h: 
 D:/UF_HW/2020_spring_hw/EEL4930/Lab/Code/Smart_Irrigation_Controller/CC3100SupportPackage/json/jsmn.h: 
 D:/CCS/ccs/tools/compiler/ti-cgt-arm_18.12.2.LTS/include/stddef.h: 
+D:/UF_HW/2020_spring_hw/EEL4930/Lab/Code/Smart_Irrigation_Controller/GUI/inc/GUI.h: 
+D:/UF_HW/2020_spring_hw/EEL4930/Lab/Code/Smart_Irrigation_Controller/GUI/inc/LCD_Button.h: 

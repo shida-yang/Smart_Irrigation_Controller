@@ -12,6 +12,7 @@
 #include <stdint.h>
 /************************************ Defines *******************************************/
 
+
 /* Custom Defines */
 #define SHIFT_AMOUNT 8
 #define MAX_ADC_VAL 4095
@@ -121,6 +122,13 @@ static uint32_t y_diff=MAX_TP_Y-MIN_TP_Y;
 #define HORIZONTAL_GRAM_SET                 0x20
 #define VERTICAL_GRAM_SET                   0x21
 
+#define WRITE_DISPLAY_BRIGHTNESS_VALUE      0xB1
+#define WRITE_CTRL_DISPLAY_VALUE            0xB3
+/* WRITE_CTRL_DISPLAY_VALUE bits */
+#define BCTRL_BIT                           BIT5    // Brightness Control Block On/Off
+#define DD_BIT                              BIT3    // Display Dimming Control
+#define BL_BIT                              BIT2    // Backlight Control On/Off
+
 /************************************ Defines *******************************************/
 
 /********************************** Structures ******************************************/
@@ -133,6 +141,26 @@ typedef struct Point {
 /************************************ Public Functions  *******************************************/
 
 /*******************************************************************************
+ * Function Name  : LCD_Configure_Brightness_CTRL
+ * Description    : Configure CTRL Display Value (WRITE_CTRL_DISPLAY_VALUE)
+ * Input          : BCTRL, DD, BL
+ * Output         : None
+ * Return         : None
+ * Attention      : None
+ *******************************************************************************/
+void LCD_Configure_Brightness_CTRL(bool BCTRL, bool DD, bool BL);
+
+/*******************************************************************************
+ * Function Name  : LCD_Change_Brightness
+ * Description    : Change the brightness of LCD
+ * Input          : brightness (0 to 255)
+ * Output         : None
+ * Return         : None
+ * Attention      : None
+ *******************************************************************************/
+void LCD_Change_Brightness(uint8_t brightness);
+
+/*******************************************************************************
  * Function Name  : LCD_DrawRectangle
  * Description    : Draw a rectangle as the specified color
  * Input          : xStart, xEnd, yStart, yEnd, Color
@@ -141,6 +169,7 @@ typedef struct Point {
  * Attention      : None
  *******************************************************************************/
 void LCD_DrawRectangle(int16_t xStart, int16_t xEnd, int16_t yStart, int16_t yEnd, uint16_t Color);
+void LCD_DrawRectangle_edge(int16_t xStart, int16_t xEnd, int16_t yStart, int16_t yEnd, uint16_t fillColor, uint16_t edgeColor);
 
 /******************************************************************************
 * Function Name  : PutChar
@@ -154,6 +183,7 @@ void LCD_DrawRectangle(int16_t xStart, int16_t xEnd, int16_t yStart, int16_t yEn
 * Attention      : None
 *******************************************************************************/
 inline void PutChar( uint16_t Xpos, uint16_t Ypos, uint8_t ASCI, uint16_t charColor);
+inline void PutChar_size( uint16_t Xpos, uint16_t Ypos, uint8_t ASCI, uint16_t charColor, uint8_t size);
 
 /******************************************************************************
 * Function Name  : LCD_Text
@@ -167,6 +197,7 @@ inline void PutChar( uint16_t Xpos, uint16_t Ypos, uint8_t ASCI, uint16_t charCo
 * Attention      : None
 *******************************************************************************/
 void LCD_Text(uint16_t Xpos, uint16_t Ypos, uint8_t *str,uint16_t Color);
+void LCD_Text_size(uint16_t Xpos, uint16_t Ypos, uint8_t *str,uint16_t Color, uint8_t size);
 
 /*******************************************************************************
 * Function Name  : LCD_Write_Data_Only

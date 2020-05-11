@@ -10,7 +10,5 @@
 #include "G8RTOS_Semaphores.h"
 #include "G8RTOS_Scheduler.h"
 //#include "Thread.h"
-//#include "QuizThread.h"
-
 
 #endif /* G8RTOS_H_ */

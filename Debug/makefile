@@ -53,6 +53,7 @@ ORDERED_OBJS += \
 "./G8RTOS/G8RTOS_Scheduler.obj" \
 "./G8RTOS/G8RTOS_SchedulerASM.obj" \
 "./G8RTOS/G8RTOS_Semaphores.obj" \
+"./GUI/src/LCD_Button.obj" \
 "../msp432p401r.cmd" \
 "../BoardSupportPackage/DriverLib/msp432p4xx_driverlib.lib" \
 $(GEN_CMDS__FLAG) \
@@ -75,6 +76,7 @@ RMDIR := RMDIR /S/Q
 -include CC3100SupportPackage/simplelink/source/subdir_vars.mk
 -include CC3100SupportPackage/spi_cc3100/subdir_vars.mk
 -include G8RTOS/subdir_vars.mk
+-include GUI/src/subdir_vars.mk
 -include subdir_rules.mk
 -include BoardSupportPackage/DriverLib/subdir_rules.mk
 -include BoardSupportPackage/src/subdir_rules.mk
@@ -85,6 +87,7 @@ RMDIR := RMDIR /S/Q
 -include CC3100SupportPackage/simplelink/source/subdir_rules.mk
 -include CC3100SupportPackage/spi_cc3100/subdir_rules.mk
 -include G8RTOS/subdir_rules.mk
+-include GUI/src/subdir_rules.mk
 -include objects.mk
 
 ifneq ($(MAKECMDGOALS),clean)
@@ -216,9 +219,9 @@ Smart_Irrigation_Controller.hex: $(EXE_OUTPUTS)
 clean:
 	-$(RM) $(BIN_OUTPUTS__QUOTED)$(EXE_OUTPUTS__QUOTED)
 	-$(RM) "main.obj" "startup_msp432p401r_ccs.obj" "system_msp432p401r.obj" "weatherServer.obj" "BoardSupportPackage\src\AsciiLib.obj" "BoardSupportPackage\src\BSP.obj" "BoardSupportPackage\src\BackChannelUart.obj" "BoardSupportPackage\src\ClockSys.obj" "BoardSupportPackage\src\Joystick.obj" "BoardSupportPackage\src\LCD.obj" "BoardSupportPackage\src\RGBLeds.obj" "BoardSupportPackage\src\bme280.obj" "BoardSupportPackage\src\bme280_support.obj" "BoardSupportPackage\src\bmi160.obj" "BoardSupportPackage\src\bmi160_support.obj" "BoardSupportPackage\src\buttons.obj" "BoardSupportPackage\src\demo_sysctl.obj" "BoardSupportPackage\src\i2c_driver.obj" "BoardSupportPackage\src\my_uart.obj" "BoardSupportPackage\src\opt3001.obj" "BoardSupportPackage\src\tmp007.obj" "CC3100SupportPackage\board\board.obj" "CC3100SupportPackage\cc3100_usage\cc3100_usage.obj" "CC3100SupportPackage\http_client\httpcli.obj" "CC3100SupportPackage\http_client\httpstr.obj" "CC3100SupportPackage\http_client\ssock.obj" "CC3100SupportPackage\json\jsmn.obj" 
-	-$(RM) "CC3100SupportPackage\simplelink\source\device.obj" "CC3100SupportPackage\simplelink\source\driver.obj" "CC3100SupportPackage\simplelink\source\flowcont.obj" "CC3100SupportPackage\simplelink\source\fs.obj" "CC3100SupportPackage\simplelink\source\netapp.obj" "CC3100SupportPackage\simplelink\source\netcfg.obj" "CC3100SupportPackage\simplelink\source\nonos.obj" "CC3100SupportPackage\simplelink\source\socket.obj" "CC3100SupportPackage\simplelink\source\spawn.obj" "CC3100SupportPackage\simplelink\source\wlan.obj" "CC3100SupportPackage\spi_cc3100\spi_cc3100.obj" "G8RTOS\G8RTOS_CriticalSection.obj" "G8RTOS\G8RTOS_IPC.obj" "G8RTOS\G8RTOS_Scheduler.obj" "G8RTOS\G8RTOS_SchedulerASM.obj" "G8RTOS\G8RTOS_Semaphores.obj" 
+	-$(RM) "CC3100SupportPackage\simplelink\source\device.obj" "CC3100SupportPackage\simplelink\source\driver.obj" "CC3100SupportPackage\simplelink\source\flowcont.obj" "CC3100SupportPackage\simplelink\source\fs.obj" "CC3100SupportPackage\simplelink\source\netapp.obj" "CC3100SupportPackage\simplelink\source\netcfg.obj" "CC3100SupportPackage\simplelink\source\nonos.obj" "CC3100SupportPackage\simplelink\source\socket.obj" "CC3100SupportPackage\simplelink\source\spawn.obj" "CC3100SupportPackage\simplelink\source\wlan.obj" "CC3100SupportPackage\spi_cc3100\spi_cc3100.obj" "G8RTOS\G8RTOS_CriticalSection.obj" "G8RTOS\G8RTOS_IPC.obj" "G8RTOS\G8RTOS_Scheduler.obj" "G8RTOS\G8RTOS_SchedulerASM.obj" "G8RTOS\G8RTOS_Semaphores.obj" "GUI\src\LCD_Button.obj" 
 	-$(RM) "main.d" "startup_msp432p401r_ccs.d" "system_msp432p401r.d" "weatherServer.d" "BoardSupportPackage\src\AsciiLib.d" "BoardSupportPackage\src\BSP.d" "BoardSupportPackage\src\BackChannelUart.d" "BoardSupportPackage\src\ClockSys.d" "BoardSupportPackage\src\Joystick.d" "BoardSupportPackage\src\LCD.d" "BoardSupportPackage\src\RGBLeds.d" "BoardSupportPackage\src\bme280.d" "BoardSupportPackage\src\bme280_support.d" "BoardSupportPackage\src\bmi160.d" "BoardSupportPackage\src\bmi160_support.d" "BoardSupportPackage\src\buttons.d" "BoardSupportPackage\src\demo_sysctl.d" "BoardSupportPackage\src\i2c_driver.d" "BoardSupportPackage\src\my_uart.d" "BoardSupportPackage\src\opt3001.d" "BoardSupportPackage\src\tmp007.d" "CC3100SupportPackage\board\board.d" "CC3100SupportPackage\cc3100_usage\cc3100_usage.d" "CC3100SupportPackage\http_client\httpcli.d" "CC3100SupportPackage\http_client\httpstr.d" "CC3100SupportPackage\http_client\ssock.d" "CC3100SupportPackage\json\jsmn.d" "CC3100SupportPackage\simplelink\source\device.d" 
-	-$(RM) "CC3100SupportPackage\simplelink\source\driver.d" "CC3100SupportPackage\simplelink\source\flowcont.d" "CC3100SupportPackage\simplelink\source\fs.d" "CC3100SupportPackage\simplelink\source\netapp.d" "CC3100SupportPackage\simplelink\source\netcfg.d" "CC3100SupportPackage\simplelink\source\nonos.d" "CC3100SupportPackage\simplelink\source\socket.d" "CC3100SupportPackage\simplelink\source\spawn.d" "CC3100SupportPackage\simplelink\source\wlan.d" "CC3100SupportPackage\spi_cc3100\spi_cc3100.d" "G8RTOS\G8RTOS_IPC.d" "G8RTOS\G8RTOS_Scheduler.d" "G8RTOS\G8RTOS_Semaphores.d" 
+	-$(RM) "CC3100SupportPackage\simplelink\source\driver.d" "CC3100SupportPackage\simplelink\source\flowcont.d" "CC3100SupportPackage\simplelink\source\fs.d" "CC3100SupportPackage\simplelink\source\netapp.d" "CC3100SupportPackage\simplelink\source\netcfg.d" "CC3100SupportPackage\simplelink\source\nonos.d" "CC3100SupportPackage\simplelink\source\socket.d" "CC3100SupportPackage\simplelink\source\spawn.d" "CC3100SupportPackage\simplelink\source\wlan.d" "CC3100SupportPackage\spi_cc3100\spi_cc3100.d" "G8RTOS\G8RTOS_IPC.d" "G8RTOS\G8RTOS_Scheduler.d" "G8RTOS\G8RTOS_Semaphores.d" "GUI\src\LCD_Button.d" 
 	-$(RM) "G8RTOS\G8RTOS_CriticalSection.d" "G8RTOS\G8RTOS_SchedulerASM.d" 
 	-@echo 'Finished clean'
 	-@echo ' '

@@ -121,4 +121,5 @@ CC3100SupportPackage/json \
 CC3100SupportPackage/simplelink/source \
 CC3100SupportPackage/spi_cc3100 \
 G8RTOS \
+GUI/src \
 

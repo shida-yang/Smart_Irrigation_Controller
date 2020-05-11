@@ -91,6 +91,40 @@ static void LCD_reset()
 /************************************  Public Functions  *******************************************/
 
 /*******************************************************************************
+ * Function Name  : LCD_Configure_Brightness_CTRL
+ * Description    : Configure CTRL Display Value (WRITE_CTRL_DISPLAY_VALUE)
+ * Input          : BCTRL, DD, BL
+ * Output         : None
+ * Return         : None
+ * Attention      : None
+ *******************************************************************************/
+void LCD_Configure_Brightness_CTRL(bool BCTRL, bool DD, bool BL){
+    uint16_t control_word=0;
+    if(BCTRL){
+        control_word |= BCTRL_BIT;
+    }
+    if(DD){
+        control_word |= DD_BIT;
+    }
+    if(BL){
+        control_word |= BL_BIT;
+    }
+    LCD_WriteReg(WRITE_CTRL_DISPLAY_VALUE, control_word);
+}
+
+/*******************************************************************************
+ * Function Name  : LCD_Change_Brightness
+ * Description    : Change the brightness of LCD
+ * Input          : brightness (0 to 255)
+ * Output         : None
+ * Return         : None
+ * Attention      : None
+ *******************************************************************************/
+void LCD_Change_Brightness(uint8_t brightness){
+    LCD_WriteReg(WRITE_DISPLAY_BRIGHTNESS_VALUE, brightness);
+}
+
+/*******************************************************************************
  * Function Name  : LCD_DrawRectangle
  * Description    : Draw a rectangle as the specified color
  * Input          : xStart, xEnd, yStart, yEnd, Color
@@ -144,6 +178,50 @@ void LCD_DrawRectangle(int16_t xStart, int16_t xEnd, int16_t yStart, int16_t yEn
     LCD_WriteReg(VERT_ADDR_END_POS, (MAX_SCREEN_X - 1)); /* Vertical GRAM Start Address */
 }
 
+void LCD_DrawRectangle_edge(int16_t xStart, int16_t xEnd, int16_t yStart, int16_t yEnd, uint16_t fillColor, uint16_t edgeColor)
+{
+    // Optimization complexity: O(64 + 2N) Bytes Written
+
+    /* Check special cases for out of bounds */
+    if(     xStart<MIN_SCREEN_X ||
+            xEnd>=MAX_SCREEN_X  ||
+            xStart>xEnd         ||
+            yStart<MIN_SCREEN_Y ||
+            yEnd>=MAX_SCREEN_Y  ||
+            yStart>yEnd         ){
+        return;
+    }
+    /* Set window area for high-speed RAM write */
+    LCD_WriteReg(HOR_ADDR_START_POS, yStart);     /* Horizontal GRAM Start Address */
+    LCD_WriteReg(HOR_ADDR_END_POS, yEnd);  /* Horizontal GRAM End Address */
+    LCD_WriteReg(VERT_ADDR_START_POS, xStart);    /* Vertical GRAM Start Address */
+    LCD_WriteReg(VERT_ADDR_END_POS, xEnd); /* Vertical GRAM Start Address */
+    /* Set cursor */
+    LCD_SetCursor(xStart, yStart);
+    /* Set index to GRAM */
+    LCD_WriteIndex(GRAM);
+    /* Send out data only to the entire area */
+    int i, j;
+    SPI_CS_LOW;
+    LCD_Write_Data_Start();
+    for(i=yStart; i<=yEnd; i++){
+        for(j=xStart; j<=xEnd; j++){
+            if(i==yStart || i==yEnd || j==xStart || j==xEnd){
+                LCD_Write_Data_Only(edgeColor);
+            }
+            else{
+                LCD_Write_Data_Only(fillColor);
+            }
+        }
+    }
+    SPI_CS_HIGH;
+    /* Set area back to span the entire LCD */
+    LCD_WriteReg(HOR_ADDR_START_POS, 0x0000);     /* Horizontal GRAM Start Address */
+    LCD_WriteReg(HOR_ADDR_END_POS, (MAX_SCREEN_Y - 1));  /* Horizontal GRAM End Address */
+    LCD_WriteReg(VERT_ADDR_START_POS, 0x0000);    /* Vertical GRAM Start Address */
+    LCD_WriteReg(VERT_ADDR_END_POS, (MAX_SCREEN_X - 1)); /* Vertical GRAM Start Address */
+}
+
 /******************************************************************************
  * Function Name  : PutChar
  * Description    : Lcd screen displays a character
@@ -168,6 +246,34 @@ inline void PutChar( uint16_t Xpos, uint16_t Ypos, uint8_t ASCI, uint16_t charCo
             if( (tmp_char >> 7 - j) & 0x01 == 0x01 )
             {
                 LCD_SetPoint( Xpos + j, Ypos + i, charColor );  /* Character color */
+            }
+        }
+    }
+}
+
+inline void PutChar_size( uint16_t Xpos, uint16_t Ypos, uint8_t ASCI, uint16_t charColor, uint8_t size)
+{
+    uint16_t i, j, k, l;
+    uint8_t buffer[16], tmp_char;
+    GetASCIICode(buffer,ASCI);  /* get font data */
+
+    uint16_t adjusted_height = 16 * size;
+    uint16_t adjusted_width = 8 * size;
+
+    for( i=0; i<adjusted_height; i+=size )
+    {
+        tmp_char = buffer[i/size];
+        for( j=0; j<adjusted_width; j+=size )
+        {
+            if( (tmp_char >> 7 - j / size) & 0x01 == 0x01 )
+            {
+//                LCD_SetPoint( Xpos + j, Ypos + i, charColor );  /* Character color */
+//                LCD_SetPoint( Xpos + j, Ypos + i, charColor );  /* Character color */
+                for( k=0; k<size; k++ ){
+                    for (l=0; l<size; l++ ){
+                        LCD_SetPoint( Xpos + j + k, Ypos + i + l, charColor );
+                    }
+                }
             }
         }
     }
@@ -205,6 +311,40 @@ void LCD_Text(uint16_t Xpos, uint16_t Ypos, uint8_t *str, uint16_t Color)
         {
             Xpos = 0;
             Ypos += 16;
+        }
+        else
+        {
+            Xpos = 0;
+            Ypos = 0;
+        }
+    }
+    while ( *str != 0 );
+}
+
+void LCD_Text_size(uint16_t Xpos, uint16_t Ypos, uint8_t *str, uint16_t Color, uint8_t size)
+{
+    uint8_t TempChar;
+
+    uint16_t adjusted_height = 16 * size;
+    uint16_t adjusted_width = 8 * size;
+
+    /* Set area back to span the entire LCD */
+    LCD_WriteReg(HOR_ADDR_START_POS, 0x0000);     /* Horizontal GRAM Start Address */
+    LCD_WriteReg(HOR_ADDR_END_POS, (MAX_SCREEN_Y - 1));  /* Horizontal GRAM End Address */
+    LCD_WriteReg(VERT_ADDR_START_POS, 0x0000);    /* Vertical GRAM Start Address */
+    LCD_WriteReg(VERT_ADDR_END_POS, (MAX_SCREEN_X - 1)); /* Vertical GRAM Start Address */
+    do
+    {
+        TempChar = *str++;
+        PutChar_size( Xpos, Ypos, TempChar, Color, size);
+        if( Xpos < MAX_SCREEN_X - adjusted_width)
+        {
+            Xpos += adjusted_width;
+        }
+        else if ( Ypos < MAX_SCREEN_X - adjusted_height)
+        {
+            Xpos = 0;
+            Ypos += adjusted_height;
         }
         else
         {
