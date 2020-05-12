@@ -60,4 +60,4 @@ config/*
 .jxbrowser-data/*
 RemoteSystemsTempFiles/*
 */.launches/*
-Debug/*
+*/Debug/*
