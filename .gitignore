@@ -55,6 +55,7 @@ dkms.conf
 # CCS related files
 Release/*
 .xdchelp
+config/*
 .launches/*
 .jxbrowser-data/*
 RemoteSystemsTempFiles/*
