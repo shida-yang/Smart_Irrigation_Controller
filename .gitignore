@@ -3,3 +3,4 @@ Release/*
 config/*
 .launches/*
 Debug/
+.settings/org.eclipse.core.resources.prefs
