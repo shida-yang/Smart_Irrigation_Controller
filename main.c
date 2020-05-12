@@ -17,7 +17,7 @@ void main(void)
 //    fillInWeekWeatherData();
 
     LCD_Clear(LCD_WHITE);
-    LCD_Text_size(0, 0, "15:33:26", LCD_BLUE, 3);
+    LCD_Text_size(0, 0, "15:33:26", LCD_BLUE, 4);
 
     while(1);
 }

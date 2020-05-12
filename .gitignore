@@ -1,4 +1,3 @@
-Debug\*
 # Prerequisites
 *.d
 
@@ -61,3 +60,4 @@ config/*
 .jxbrowser-data/*
 RemoteSystemsTempFiles/*
 */.launches/*
+Debug/*
