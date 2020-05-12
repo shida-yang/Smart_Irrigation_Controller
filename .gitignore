@@ -8,9 +8,9 @@
 *.elf
 
 # Linker output
-*.ilk
-*.map
-*.exp
+# *.ilk
+# *.map
+# *.exp
 
 # Precompiled Headers
 *.gch
