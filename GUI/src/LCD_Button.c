@@ -1,5 +1,11 @@
 #include "LCD_Button.h"
 
+void adjustButtonSizeBasedOnText(button_t* button, uint8_t padding_pixel_width){
+    uint16_t text_width = strlen(button->text) * CHAR_WIDTH;
+    button->width = text_width + 2 * padding_pixel_width + 2;
+    button->height = CHAR_HEIGHT + 2 * padding_pixel_width + 2;
+}
+
 void drawButton(button_t* button){
     // Calculate text position
     uint16_t text_width = strlen(button->text) * CHAR_WIDTH;

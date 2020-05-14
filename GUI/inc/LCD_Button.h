@@ -23,6 +23,7 @@ typedef struct button{
     char text[16];
 } button_t;
 
+void adjustButtonSizeBasedOnText(button_t* button, uint8_t padding_pixel_width);
 void drawButton(button_t* button);
 bool buttonTouched(button_t* button, uint16_t touch_x, uint16_t touch_y);
 
