@@ -50,3 +50,9 @@ void updateSingleElement(screen_element_t* screenElementPtr, element_ptr_t newEl
     }
     drawSingleElement(screenElementPtr);
 }
+
+void drawNavBarLine(uint16_t color){
+    for(int i = MIN_SCREEN_X; i < MAX_SCREEN_X; i++){
+        LCD_SetPoint(i, NAV_BAR_HEIGHT, color);
+    }
+}

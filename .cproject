@@ -36,7 +36,6 @@
 								<option id="com.ti.ccstudio.buildDefinitions.MSP432_18.12.compilerID.FLOAT_SUPPORT.1076225772" name="Specify floating point support (--float_support)" superClass="com.ti.ccstudio.buildDefinitions.MSP432_18.12.compilerID.FLOAT_SUPPORT" useByScannerDiscovery="false" value="com.ti.ccstudio.buildDefinitions.MSP432_18.12.compilerID.FLOAT_SUPPORT.FPv4SPD16" valueType="enumerated"/>
 								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.ti.ccstudio.buildDefinitions.MSP432_18.12.compilerID.DEFINE.2087923085" name="Pre-define NAME (--define, -D)" superClass="com.ti.ccstudio.buildDefinitions.MSP432_18.12.compilerID.DEFINE" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="__MSP432P401R__"/>
-									<listOptionValue builtIn="false" value="__TI_TIME_USES_64"/>
 									<listOptionValue builtIn="false" value="HTTPCli_LIBTYPE_MIN"/>
 									<listOptionValue builtIn="false" value="__SL__"/>
 									<listOptionValue builtIn="false" value="ccs"/>

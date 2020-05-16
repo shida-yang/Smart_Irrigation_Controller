@@ -18,7 +18,18 @@ void main(void)
 //    fillInWeekWeatherData();
 
     LCD_Clear(LCD_WHITE);
-    LCD_Text_size(0, 0, "15:33:26", LCD_BLUE, 3);
+//    LCD_Text_size(0, 0, "15:33:26", LCD_BLUE, 3);
 
-    while(1);
+    drawMainScreen();
+    updateDate(5,15,20,FRI);
+
+    connectToTimeServer();
+
+    struct tm ts;
+
+    while(1){
+        getCurrentTime(&ts);
+        updateTime(ts.tm_hour, ts.tm_min, ts.tm_sec);
+        DelayMs(4000);
+    }
 }

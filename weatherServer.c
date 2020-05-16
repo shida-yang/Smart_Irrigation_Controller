@@ -9,6 +9,19 @@ WEATHER_SERVER_ERROR_CODE_t connectToWeatherServer(){
 
     /* Connect to HTTP server */
     retVal = ConnectToHTTPServer(httpClient_h, HOST_NAME, HOST_PORT);
+
+    if(retVal < 0){
+      return HTTP_CONNECT_TO_WEATHER_SERVER_FAILED;
+    }
+    return WEATHER_SERVER_SUCCESS_RETURN;
+}
+
+WEATHER_SERVER_ERROR_CODE_t connectToTimeServer(){
+    int32_t retVal = -1;
+
+    /* Connect to HTTP server */
+    retVal = ConnectToHTTPServer(httpClient_h, TIME_HOST, HOST_PORT);
+
     if(retVal < 0){
       return HTTP_CONNECT_TO_WEATHER_SERVER_FAILED;
     }
@@ -239,3 +252,20 @@ void fillInWeekWeatherData(){
     }
 }
 
+void getCurrentTime(struct tm* ts){
+    char* tempPtr1;
+    char* tempPtr2;
+
+    GetDataFromHTTPServer(httpClient_h, TIME_HOST, TIME_URI, &tempPtr2);
+
+    //..."unixtime":1589586201,...
+    tempPtr1 = strstr(tempPtr2, "\"unixtime\"");
+    tempPtr1 += 11;
+    tempPtr2 = strstr(tempPtr1, ",");
+    *tempPtr2 = '\0';
+    __time64_t dt = atoi(tempPtr1);
+
+    dt += TIME_ZONE_OFFSET;
+
+    *ts = *localtime(&dt);
+}

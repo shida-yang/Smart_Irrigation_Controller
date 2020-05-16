@@ -3,6 +3,11 @@
 
 #include "LCD_Button.h"
 #include "LCD.h"
+#include "stdio.h"
+
+#define SCREEN_MARGIN 4
+#define NAV_BAR_BUTTON_PADDING 2
+#define NAV_BAR_HEIGHT (SCREEN_MARGIN * 2 + CHAR_HEIGHT + (NAV_BAR_BUTTON_PADDING + 1) * 2 + 1)
 
 typedef enum{
     BUTTON,
@@ -32,5 +37,6 @@ void drawAllElements(screen_element_t* screenElementList, uint8_t numberOfElemen
 void drawSingleElement(screen_element_t* screenElementPtr);
 void eraseSingleElement(screen_element_t* screenElementPtr, uint16_t backgroundColor);
 void updateSingleElement(screen_element_t* screenElementPtr, element_ptr_t newElementPtr, uint16_t backgroundColor);
+void drawNavBarLine(uint16_t color);
 
 #endif
