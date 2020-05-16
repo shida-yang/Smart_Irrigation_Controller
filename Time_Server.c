@@ -19,7 +19,9 @@ void getCurrentTime(struct tm* ts){
     char* tempPtr1;
     char* tempPtr2;
 
+    connectToTimeServer();
     GetDataFromHTTPServer(httpClient_time_h, TIME_HOST, TIME_URI, &tempPtr2);
+    HTTPCli_disconnect(httpClient_time_h);
 
     //..."unixtime":1589586201,...
     tempPtr1 = strstr(tempPtr2, "\"unixtime\"");

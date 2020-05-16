@@ -18,7 +18,9 @@ WEATHER_SERVER_ERROR_CODE_t connectToWeatherServer(){
 
 char* getRawForecastWeatherJSON(){
     char* ptr=0;
+    connectToWeatherServer();
     GetDataFromHTTPServer(httpClient_h, HOST_NAME, GET_FORECAST_URI, &ptr);
+    HTTPCli_disconnect(httpClient_h);
     return ptr;
 }
 
@@ -26,7 +28,9 @@ char* getRawHistoricalWeatherJSON(uint32_t dt){
     char* ptr=0;
     char strBuf[256];
     snprintf(strBuf, 256, GET_HISTORICAL_URI_TEMPLATE, dt);
+    connectToWeatherServer();
     GetDataFromHTTPServer(httpClient_h, HOST_NAME, strBuf, &ptr);
+    HTTPCli_disconnect(httpClient_h);
     return ptr;
 }
 
@@ -240,4 +244,6 @@ void fillInWeekWeatherData(){
         weekWeatherData[i].rain_depth = rain_depth;
 
     }
+
+
 }

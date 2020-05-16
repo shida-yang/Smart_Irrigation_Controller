@@ -100,7 +100,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="CC3100SupportPackage/http_client/httpsend.c|CC3100SupportPackage/http_client/urlfile.c|CC3100SupportPackage/http_client/ssnull.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="weather-icon-arrays|CC3100SupportPackage/http_client/httpsend.c|CC3100SupportPackage/http_client/urlfile.c|CC3100SupportPackage/http_client/ssnull.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>

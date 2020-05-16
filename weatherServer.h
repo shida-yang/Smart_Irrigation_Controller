@@ -11,8 +11,6 @@
 /* JSON Parser include */
 #include "jsmn.h"
 
-#define __TI_TIME_USES_64 1
-
 typedef enum{
     WEATHER_SERVER_SUCCESS_RETURN = 0,
     HTTP_CONNECT_TO_WEATHER_SERVER_FAILED = -1,
@@ -31,7 +29,7 @@ typedef struct dailyWeatherData{
 } dailyWeatherData_t;
 
 #define SECONDS_IN_A_DAY       86400
-#define TIME_ZONE_OFFSET       (-4*3600)
+#define TIME_ZONE_OFFSET       (2*3600)
 #define HOST_NAME              "api.openweathermap.org"
 #define HOST_PORT              80
 #define GET_FORECAST_URI       "/data/2.5/onecall?lat=28.141131&lon=-82.315402&units=imperial&exclude=minutely,current,hourly&appid=b8a32c20f2c5d78f18ae6d4d6fcf681a"

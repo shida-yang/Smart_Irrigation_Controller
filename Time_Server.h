@@ -12,7 +12,7 @@ typedef enum{
 } TIME_SERVER_ERROR_CODE_t;
 
 #define HOST_PORT              80
-#define TIME_ZONE_OFFSET       (-4*3600)
+#define TIME_ZONE_OFFSET       (2*3600)
 #define TIME_HOST              "worldtimeapi.org"
 #define TIME_URI               "/api/timezone/America/New_York"
 

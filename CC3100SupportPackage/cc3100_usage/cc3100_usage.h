@@ -80,11 +80,11 @@ Summer: 2-3 times a week for a total of 2.0 to 2.5 inches per week
 Fall: 1-2 times a week for a total of 1.0 to 1.5 inches per week
 Winter: 1 time a week for a total of 0.5 to 1.0 inches per week
 */
-#define TARGET_WATER_LEVEL_SPRING_MM    38.1
-#define TARGET_WATER_LEVEL_SUMMER_MM    63.5
-#define TARGET_WATER_LEVEL_FALL_MM      38.1
-#define TARGET_WATER_LEVEL_WINTER_MM    25.4
-#define SINGLE_TIME_WATER_LEVEL_MM      19.05
+#define TARGET_WATER_LEVEL_SPRING_IN    1.5
+#define TARGET_WATER_LEVEL_SUMMER_IN    2.5
+#define TARGET_WATER_LEVEL_FALL_IN      1.5
+#define TARGET_WATER_LEVEL_WINTER_IN    1
+#define SINGLE_TIME_WATER_LEVEL_IN      0.75
 /**************************** Defines ******************************/
 
 
