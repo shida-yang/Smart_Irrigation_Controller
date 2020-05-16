@@ -16,18 +16,6 @@ WEATHER_SERVER_ERROR_CODE_t connectToWeatherServer(){
     return WEATHER_SERVER_SUCCESS_RETURN;
 }
 
-WEATHER_SERVER_ERROR_CODE_t connectToTimeServer(){
-    int32_t retVal = -1;
-
-    /* Connect to HTTP server */
-    retVal = ConnectToHTTPServer(httpClient_h, TIME_HOST, HOST_PORT);
-
-    if(retVal < 0){
-      return HTTP_CONNECT_TO_WEATHER_SERVER_FAILED;
-    }
-    return WEATHER_SERVER_SUCCESS_RETURN;
-}
-
 char* getRawForecastWeatherJSON(){
     char* ptr=0;
     GetDataFromHTTPServer(httpClient_h, HOST_NAME, GET_FORECAST_URI, &ptr);
@@ -135,6 +123,7 @@ void fillInWeekWeatherData(){
 
         weekWeatherData[i].day = ts.tm_mday;
         weekWeatherData[i].month = ts.tm_mon + 1;   //because Jan is 0
+        weekWeatherData[i].weekday = ts.tm_wday;
 
 
         //..."min":293,
@@ -208,6 +197,7 @@ void fillInWeekWeatherData(){
 
         weekWeatherData[i].day = ts.tm_mday;
         weekWeatherData[i].month = ts.tm_mon + 1;   //because Jan is 0
+        weekWeatherData[i].weekday = ts.tm_wday;
 
 
         //..."temp":288.05,...
@@ -250,22 +240,4 @@ void fillInWeekWeatherData(){
         weekWeatherData[i].rain_depth = rain_depth;
 
     }
-}
-
-void getCurrentTime(struct tm* ts){
-    char* tempPtr1;
-    char* tempPtr2;
-
-    GetDataFromHTTPServer(httpClient_h, TIME_HOST, TIME_URI, &tempPtr2);
-
-    //..."unixtime":1589586201,...
-    tempPtr1 = strstr(tempPtr2, "\"unixtime\"");
-    tempPtr1 += 11;
-    tempPtr2 = strstr(tempPtr1, ",");
-    *tempPtr2 = '\0';
-    __time64_t dt = atoi(tempPtr1);
-
-    dt += TIME_ZONE_OFFSET;
-
-    *ts = *localtime(&dt);
 }

@@ -23,6 +23,7 @@ typedef enum{
 typedef struct dailyWeatherData{
     uint8_t month;  //1=Jan, 2=Feb, ..., 12=Dec
     uint8_t day;
+    uint8_t weekday;
     float max_temp_f;
     float min_temp_f;
     char weather[MAX_WEATHER_TEXT_LEN];
@@ -36,16 +37,13 @@ typedef struct dailyWeatherData{
 #define GET_FORECAST_URI       "/data/2.5/onecall?lat=28.141131&lon=-82.315402&units=imperial&exclude=minutely,current,hourly&appid=b8a32c20f2c5d78f18ae6d4d6fcf681a"
 #define GET_HISTORICAL_URI_TEMPLATE "/data/2.5/onecall/timemachine?lat=28.141131&lon=-82.315402&dt=%d&units=imperial&appid=b8a32c20f2c5d78f18ae6d4d6fcf681a"
 
-#define TIME_HOST              "worldtimeapi.org"
-#define TIME_URI               "/api/timezone/America/New_York"
 
 WEATHER_SERVER_ERROR_CODE_t connectToWeatherServer();
-WEATHER_SERVER_ERROR_CODE_t connectToTimeServer();
 char* getRawForecastWeatherJSON();
 char* getRawHistoricalWeatherJSON(uint32_t dt);
 WEATHER_SERVER_ERROR_CODE_t parseRawWeatherJSON(char* rawJSON, jsmntok_t** outputTokenList);
 void generatePrevThreeDaysDT(uint32_t currDT, uint32_t* prevDTs);
 void fillInWeekWeatherData();
-void getCurrentTime(struct tm* ts);
+
 
 #endif

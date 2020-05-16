@@ -62,6 +62,7 @@ static uint32_t y_diff=MAX_TP_Y-MIN_TP_Y;
 #define LCD_CYAN           0x7FFF
 #define LCD_YELLOW         0xFFE0
 #define LCD_GRAY           0x2104
+#define LCD_LIGHT_GRAY     (LCD_GRAY<<2)
 #define LCD_PURPLE         0xF11F
 #define LCD_ORANGE         0xFD20
 #define LCD_PINK           0xfdba

@@ -1,6 +1,7 @@
 #include "msp.h"
 #include "BSP.h"
 #include "weatherServer.h"
+#include "Time_Server.h"
 #include "GUI.h"
 //#include "Screen_Template.h"
 
@@ -15,7 +16,7 @@ void main(void)
 //    uint16_t len=parseRawWeatherJSON(ptr1, &tokenList);
 //    free(tokenList);
 
-//    fillInWeekWeatherData();
+    fillInWeekWeatherData();
 
     LCD_Clear(LCD_WHITE);
 //    LCD_Text_size(0, 0, "15:33:26", LCD_BLUE, 3);

@@ -1,11 +1,15 @@
 #include "Main_Screen.h"
 
+extern dailyWeatherData_t weekWeatherData[7];
+
 screen_element_t main_screen_element_list[NUMBER_OF_MAIN_SCREEN_ELEMENTS];
 button_t setting_button, watering_button, schedule_button;
+button_t weekday_buttons[7];
 char weekdays_array[][4] = {"SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"};
 text_element_t date_text_element, time_text_element;
 char date_str[DATE_TEXT_LEN + 1] = "--/--/-- ---";
 char time_str[TIME_TEXT_LEN + 1] = "--:--:--";
+WEEKDAYS_t currently_active_weekday = SUN;
 
 void generateNavBarButtons(){
     main_screen_element_list[SETTING_BUTTON].type = BUTTON;
@@ -52,14 +56,41 @@ void generateDateTimeText(){
     time_text_ptr->color = TIME_TEXT_COLOR;
     time_text_ptr->size = TIME_TEXT_SIZE;
     time_text_ptr->text_ptr = time_str;
-    time_text_ptr->y_coordinate = date_text_ptr->y_coordinate + CHAR_HEIGHT;
+    time_text_ptr->y_coordinate = date_text_ptr->y_coordinate + CHAR_HEIGHT * DATE_TEXT_SIZE;
     time_text_ptr->x_coordinate = (MAX_SCREEN_X >> 1) - ((TIME_TEXT_LEN * CHAR_WIDTH * TIME_TEXT_SIZE) >> 1);
+}
+
+void generateWeekdayButtons(){
+    uint16_t current_x_coordinate = 4;
+    for(WEEKDAYS_t i = SUN; i <= SAT; i++){
+        main_screen_element_list[i+5].type = BUTTON;
+        main_screen_element_list[i+5].element_ptr.button_ptr = &weekday_buttons[i];
+        button_t* curr_weekday_button_ptr = main_screen_element_list[i+5].element_ptr.button_ptr;
+
+        if(i == currently_active_weekday){
+            curr_weekday_button_ptr->color = WEEKDAY_BUTTON_ACTIVE_COLOR;
+        }
+        else{
+            curr_weekday_button_ptr->color = WEEKDAY_BUTTON_DEACTIVE_COLOR;
+        }
+
+        strcpy(curr_weekday_button_ptr->text, &weekdays_array[i]);
+
+        curr_weekday_button_ptr->width = WEEKDAY_BUTTON_WIDTH;
+        curr_weekday_button_ptr->height = WEEKDAY_BUTTON_HEIGHT;
+
+        curr_weekday_button_ptr->y_coordinate = main_screen_element_list[TIME_TEXT].element_ptr.text_element_ptr->y_coordinate + CHAR_HEIGHT * TIME_TEXT_SIZE;
+        curr_weekday_button_ptr->x_coordinate = current_x_coordinate;
+
+        current_x_coordinate += (WEEKDAY_BUTTON_WIDTH + 4);
+    }
 }
 
 void drawMainScreen(){
     generateNavBarButtons();
     drawNavBarLine(LCD_BLACK);
     generateDateTimeText();
+    generateWeekdayButtons();
     drawAllElements(main_screen_element_list, NUMBER_OF_MAIN_SCREEN_ELEMENTS);
 }
 
@@ -75,6 +106,6 @@ void updateTime(uint8_t hour, uint8_t minute, uint8_t second){
     drawSingleElement(&main_screen_element_list[TIME_TEXT]);
 }
 
-void updateWeather(){
+void updateWeather(WEEKDAYS_t weekday){
 
 }
