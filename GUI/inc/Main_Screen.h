@@ -56,12 +56,12 @@ typedef enum{
 #define RAIN_SUM_TEXT_SIZE          1
 #define RAIN_SUM_TEXT_COLOR         LCD_BLACK
 #define RAIN_SUM_TEXT_LEN           26
-#define RAIN_SUM_FORMAT             "Weekly Rain Sum: %6.2f in"
+#define RAIN_SUM_FORMAT             "Weekly Rain Sum: %6.2f mm"
 
 #define RAIN_TARGET_TEXT_SIZE          1
 #define RAIN_TARGET_TEXT_COLOR         LCD_BLACK
 #define RAIN_TARGET_TEXT_LEN           26
-#define RAIN_TARGET_FORMAT             "Rain Target:     %6.2f in"
+#define RAIN_TARGET_FORMAT             "Rain Target:     %6.2f mm"
 
 #define DATE_BUTTON_WIDTH            41
 #define DATE_BUTTON_HEIGHT           (CHAR_HEIGHT + (NAV_BAR_BUTTON_PADDING + 1) * 2)
@@ -87,9 +87,9 @@ typedef enum{
 
 #define RAIN_DEPTH_TEXT_X_COORDINATE    (WEATHER_ICON_X_COORDINATE + WEATHER_ICON_WIDTH + 2 + SCREEN_MARGIN * 2)
 #define RAIN_DEPTH_TEXT_Y_COORDINATE    (LO_TEMP_TEXT_Y_COORDINATE + CHAR_HEIGHT)
-#define RAIN_DEPTH_TEXT_FORMAT          "Rain Depth:    %6.2f in"
+#define RAIN_DEPTH_TEXT_FORMAT          "Rain Depth:    %6.2f mm"
 
-void generateNavBarButtons();
+static void generateNavBarButtons();
 void generateDateTimeText();
 void generateRainSumTarget();
 void generateDateButtons();
@@ -101,5 +101,8 @@ void displayDateWeather();
 void updateRainSumTartget(float rainSum, float rainTarget);
 void updateWeatherIcon(char* weather);
 void drawIcon(const unsigned char* icon);
+
+static MAIN_SCREEN_ELEMENT_INDEX_t detectPressedElement(uint16_t x, uint16_t y);
+void settingScreenPressed();
 
 #endif

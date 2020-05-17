@@ -1,0 +1,69 @@
+#ifndef SETTING_SCREEN_H
+#define SETTING_SCREEN_H
+
+#include "Screen_Template.h"
+
+typedef enum{
+    BACK_TO_MAIN_BUTTON,
+    DISCARD_BUTTON,
+    SAVE_BUTTON,
+    TIME_HOUR_TEXT,
+    TIME_MINUTE_TEXT,
+    TIME_SECOND_TEXT,
+    BRIGHTNESS_INDEX_TEXT,
+    SCREEN_TIMEOUT_INDEX_TEXT,
+    TIME_AUTO_BUTTON,
+    BRIGHTNESS_AUTO_BUTTON,
+    UP_BUTTON,
+    DOWN_BUTTON,
+    NUMBER_OF_SETTING_SCREEN_ELEMENTS
+} SETTING_SCREEN_ELEMENT_INDEX_t;
+
+#define SETTING_SCREEN_BACKGROUND_COLOR        LCD_WHITE
+
+#define BACK_TO_MAIN_BUTTON_COLOR   LCD_BLUE
+#define DISCARD_BUTTON_COLOR        LCD_RED
+#define SAVE_BUTTON_COLOR           LCD_GREEN
+
+#define SELECTED_TEXT       LCD_GREEN
+#define NORMAL_TEXT         LCD_BLACK
+
+#define SETTING_TIME_TEXT_SIZE  2
+#define SETTING_TIME_TEXT_X     SCREEN_MARGIN
+#define SETTING_TIME_TEXT_Y     (NAV_BAR_HEIGHT + SCREEN_MARGIN)
+#define HOUR_TEXT_X             (SETTING_TIME_TEXT_X + 5 * CHAR_WIDTH * SETTING_TIME_TEXT_SIZE)
+#define MINUTE_TEXT_X           (HOUR_TEXT_X + 3 * CHAR_WIDTH * SETTING_TIME_TEXT_SIZE)
+#define SECOND_TEXT_X           (MINUTE_TEXT_X + 3 * CHAR_WIDTH * SETTING_TIME_TEXT_SIZE)
+
+#define SETTING_BRIGHTNESS_TEXT_SIZE    2
+#define SETTING_BRIGHTNESS_TEXT_X       SCREEN_MARGIN
+#define SETTING_BRIGHTNESS_TEXT_Y       (SETTING_TIME_TEXT_Y + CHAR_HEIGHT * SETTING_TIME_TEXT_SIZE)
+#define BEIGHTNESS_TEXT_X               (SETTING_BRIGHTNESS_TEXT_X + 12 * CHAR_WIDTH * SETTING_BRIGHTNESS_TEXT_SIZE)
+
+#define SETTING_TIMEOUT_TEXT_SIZE       1
+#define SETTING_TIMEOUT_TEXT_X          SCREEN_MARGIN
+#define SETTING_TIMEOUT_TEXT_Y_1        (SETTING_BRIGHTNESS_TEXT_Y + CHAR_HEIGHT * SETTING_BRIGHTNESS_TEXT_SIZE + SCREEN_MARGIN)
+#define SETTING_TIMEOUT_TEXT_Y_2        (SETTING_TIMEOUT_TEXT_Y_1 + CHAR_HEIGHT * SETTING_TIMEOUT_TEXT_SIZE)
+#define TIMEOUT_INDEX_TEXT_SIZE         2
+#define TIMEOUT_INDEX_TEXT_X            (SETTING_TIMEOUT_TEXT_X + 10 * CHAR_WIDTH * TIMEOUT_INDEX_TEXT_SIZE)
+
+#define AUTO_BUTTON_ACTIVATE_COLOR       LCD_GREEN
+#define AUTO_BUTTON_DEACTIVATE_COLOR     LCD_LIGHT_GRAY
+
+static void generateNavBarButtons();
+void genetateTime();
+void generateBrightness();
+void generateScreenTimeout();
+void generateAutoButtons();
+void generateUpDownButtons();
+void drawSettingScreen();
+void updateTimeHour(uint8_t hour);
+void updateTimeMinute(uint8_t minute);
+void updateTimeSecond(uint8_t second);
+void updateBrightness(uint8_t brightness);
+void updateTimeout(uint8_t timeout);
+
+static SETTING_SCREEN_ELEMENT_INDEX_t detectPressedElement(uint16_t x, uint16_t y);
+void settingScreenPressed();
+
+#endif

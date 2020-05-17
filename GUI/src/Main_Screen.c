@@ -2,18 +2,18 @@
 
 extern dailyWeatherData_t weekWeatherData[7];
 
-screen_element_t main_screen_element_list[NUMBER_OF_MAIN_SCREEN_ELEMENTS];
-button_t setting_button, watering_button, schedule_button, plan_button;
-button_t date_buttons[7];
-char weekdays_array[][4] = {"SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"};
-text_element_t date_text_element, time_text_element, rain_sum_text_element, rain_target_text_element;
-char date_str[DATE_TEXT_LEN + 1] = "            ";
-char time_str[TIME_TEXT_LEN + 1] = "        ";
-char rain_sum_str[RAIN_SUM_TEXT_LEN + 1] =       "Weekly Rain Sum:       ";
-char rain_target_str[RAIN_TARGET_TEXT_LEN + 1] = "Rain Target:           ";
-uint8_t currently_active_date = 3;
+static screen_element_t main_screen_element_list[NUMBER_OF_MAIN_SCREEN_ELEMENTS];
+static button_t setting_button, watering_button, schedule_button, plan_button;
+static button_t date_buttons[7];
+static char weekdays_array[][4] = {"SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"};
+static text_element_t date_text_element, time_text_element, rain_sum_text_element, rain_target_text_element;
+static char date_str[DATE_TEXT_LEN + 1] = "            ";
+static char time_str[TIME_TEXT_LEN + 1] = "        ";
+static char rain_sum_str[RAIN_SUM_TEXT_LEN + 1] =       "Weekly Rain Sum:       ";
+static char rain_target_str[RAIN_TARGET_TEXT_LEN + 1] = "Rain Target:           ";
+static uint8_t currently_active_date = 3;
 
-void generateNavBarButtons(){
+static void generateNavBarButtons(){
     main_screen_element_list[SETTING_BUTTON].type = BUTTON;
     main_screen_element_list[SETTING_BUTTON].element_ptr.button_ptr = &setting_button;
     button_t* setting_button_ptr = main_screen_element_list[SETTING_BUTTON].element_ptr.button_ptr;
@@ -120,6 +120,7 @@ void generateDateButtons(){
 }
 
 void drawMainScreen(){
+    LCD_Clear(LCD_WHITE);
     generateNavBarButtons();
     drawNavBarLine(LCD_BLACK);
     generateDateTimeText();

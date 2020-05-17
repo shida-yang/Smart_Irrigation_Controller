@@ -9,18 +9,26 @@ void main(void)
 {
     BSP_InitBoard();
 
-    LCD_Clear(LCD_WHITE);
 
-    drawMainScreen();
 
-    updateRainSumTartget(5.87951, 91.56482);
+//    drawMainScreen();
+//
+//    updateRainSumTartget(5.87951, 91.56482);
+//
+//    struct tm ts;
+//
+//    while(1){
+//        getCurrentTime(&ts);
+//        updateDate(ts.tm_mon+1, ts.tm_mday, ts.tm_year%100, ts.tm_wday);
+//        updateTime(ts.tm_hour, ts.tm_min, ts.tm_sec);
+//        DelayMs(4000);
+//    }
 
-    struct tm ts;
-
-    while(1){
-        getCurrentTime(&ts);
-        updateDate(ts.tm_mon+1, ts.tm_mday, ts.tm_year%100, ts.tm_wday);
-        updateTime(ts.tm_hour, ts.tm_min, ts.tm_sec);
-        DelayMs(4000);
-    }
+    drawSettingScreen();
+    updateTimeHour(16);
+    updateTimeMinute(8);
+    updateTimeSecond(0);
+    updateBrightness(3);
+    updateTimeout(0);
+    while(1);
 }
