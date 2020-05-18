@@ -47,8 +47,19 @@ typedef enum{
 #define TIMEOUT_INDEX_TEXT_SIZE         2
 #define TIMEOUT_INDEX_TEXT_X            (SETTING_TIMEOUT_TEXT_X + 10 * CHAR_WIDTH * TIMEOUT_INDEX_TEXT_SIZE)
 
-#define AUTO_BUTTON_ACTIVATE_COLOR       LCD_GREEN
-#define AUTO_BUTTON_DEACTIVATE_COLOR     LCD_LIGHT_GRAY
+#define TIME_AUTO_BUTTON_X              (BEIGHTNESS_TEXT_X + CHAR_WIDTH * SETTING_BRIGHTNESS_TEXT_SIZE + SCREEN_MARGIN * 3)
+#define TIME_AUTO_BUTTON_Y              (SETTING_TIME_TEXT_Y + 2)
+#define BRIGHTNESS_AUTO_BUTTON_X        (BEIGHTNESS_TEXT_X + CHAR_WIDTH * SETTING_BRIGHTNESS_TEXT_SIZE + SCREEN_MARGIN * 3)
+#define BRIGHTNESS_AUTO_BUTTON_Y        (SETTING_BRIGHTNESS_TEXT_Y + 2)
+#define AUTO_BUTTON_ACTIVATE_COLOR      LCD_GREEN
+#define AUTO_BUTTON_DEACTIVATE_COLOR    LCD_LIGHT_GRAY
+
+#define UP_DOWN_BUTTON_PADDING  5
+#define UP_DOWN_BUTTON_COLOR    LCD_YELLOW
+#define DOWN_BUTTON_X           (MAX_SCREEN_X - SCREEN_MARGIN * 4 - down_button_ptr->width)
+#define DOWN_BUTTON_Y           (MAX_SCREEN_Y - SCREEN_MARGIN * 4 - down_button_ptr->height)
+#define UP_BUTTON_X             DOWN_BUTTON_X
+#define UP_BUTTON_Y             (DOWN_BUTTON_Y - SCREEN_MARGIN * 4 - up_button_ptr->height)
 
 static void generateNavBarButtons();
 void genetateTime();
@@ -62,8 +73,10 @@ void updateTimeMinute(uint8_t minute);
 void updateTimeSecond(uint8_t second);
 void updateBrightness(uint8_t brightness);
 void updateTimeout(uint8_t timeout);
+void updateTextElement(SETTING_SCREEN_ELEMENT_INDEX_t element_index, uint8_t value);
+void updateAutoButton(SETTING_SCREEN_ELEMENT_INDEX_t element_index, bool auto_on);
 
 static SETTING_SCREEN_ELEMENT_INDEX_t detectPressedElement(uint16_t x, uint16_t y);
-void settingScreenPressed();
+void settingScreenPressed(uint16_t x, uint16_t y);
 
 #endif

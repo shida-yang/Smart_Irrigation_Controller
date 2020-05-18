@@ -5,6 +5,27 @@
 #include "GUI.h"
 //#include "Screen_Template.h"
 
+void PORT4_IRQHandler(){
+    if(P4->IV==2){
+        P4->IE &= (~BIT0);
+        P4->IFG &= (~BIT0);
+        BGT_WaitForTap();
+    }
+}
+
+void BGT_WaitForTap(){
+    DelayMs(50);
+    if((P4->IN & BIT0)==0){
+        //read coordinate
+        Point p;
+        p=TP_ReadXY();
+
+        settingScreenPressed(p.x, p.y);
+    }
+    P4->IFG &= (~BIT0);
+    P4->IE |= BIT0;
+}
+
 void main(void)
 {
     BSP_InitBoard();
@@ -24,11 +45,10 @@ void main(void)
 //        DelayMs(4000);
 //    }
 
+    NVIC_EnableIRQ(PORT4_IRQn);
+
     drawSettingScreen();
-    updateTimeHour(16);
-    updateTimeMinute(8);
-    updateTimeSecond(0);
-    updateBrightness(3);
-    updateTimeout(0);
+
+
     while(1);
 }

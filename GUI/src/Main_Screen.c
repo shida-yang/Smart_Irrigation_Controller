@@ -11,7 +11,7 @@ static char date_str[DATE_TEXT_LEN + 1] = "            ";
 static char time_str[TIME_TEXT_LEN + 1] = "        ";
 static char rain_sum_str[RAIN_SUM_TEXT_LEN + 1] =       "Weekly Rain Sum:       ";
 static char rain_target_str[RAIN_TARGET_TEXT_LEN + 1] = "Rain Target:           ";
-static uint8_t currently_active_date = 3;
+static uint8_t currently_active_date = 4;
 
 static void generateNavBarButtons(){
     main_screen_element_list[SETTING_BUTTON].type = BUTTON;
