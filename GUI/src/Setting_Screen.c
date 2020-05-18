@@ -157,12 +157,13 @@ void drawSettingScreen(){
     clickable_text_number[BRIGHTNESS_INDEX_TEXT - TIME_HOUR_TEXT] = 5;
     clickable_text_number[SCREEN_TIMEOUT_INDEX_TEXT - TIME_HOUR_TEXT] = 0;
     auto_button_state[TIME_AUTO_BUTTON - TIME_AUTO_BUTTON] = 0;
-    auto_button_state[BRIGHTNESS_AUTO_BUTTON - TIME_AUTO_BUTTON] = 0;
+    auto_button_state[BRIGHTNESS_AUTO_BUTTON - TIME_AUTO_BUTTON] = 1;
     // Update screen based on current values
     for(int i = TIME_HOUR_TEXT; i <= SCREEN_TIMEOUT_INDEX_TEXT; i++){
         updateTextElement(i, clickable_text_number[i - TIME_HOUR_TEXT]);
     }
-
+    updateAutoButton(TIME_AUTO_BUTTON, auto_button_state[TIME_AUTO_BUTTON - TIME_AUTO_BUTTON]);
+    updateAutoButton(BRIGHTNESS_AUTO_BUTTON, auto_button_state[BRIGHTNESS_AUTO_BUTTON - TIME_AUTO_BUTTON]);
 }
 
 void updateTimeHour(uint8_t hour){
@@ -267,7 +268,7 @@ void updateAutoButton(SETTING_SCREEN_ELEMENT_INDEX_t element_index, bool auto_on
     drawSingleElement(&setting_screen_element_list[element_index]);
 }
 
-static SETTING_SCREEN_ELEMENT_INDEX_t detectPressedElement(uint16_t x, uint16_t y){
+static SETTING_SCREEN_ELEMENT_INDEX_t detectPressedElement_setting(uint16_t x, uint16_t y){
     for(int i = 0; i < NUMBER_OF_SETTING_SCREEN_ELEMENTS; i++){
         // Button
         if(setting_screen_element_list[i].type == BUTTON){
@@ -296,7 +297,7 @@ static SETTING_SCREEN_ELEMENT_INDEX_t detectPressedElement(uint16_t x, uint16_t 
 }
 
 void settingScreenPressed(uint16_t x, uint16_t y){
-    SETTING_SCREEN_ELEMENT_INDEX_t element_index = detectPressedElement(x, y);
+    SETTING_SCREEN_ELEMENT_INDEX_t element_index = detectPressedElement_setting(x, y);
     switch(element_index){
     case BACK_TO_MAIN_BUTTON:
         break;

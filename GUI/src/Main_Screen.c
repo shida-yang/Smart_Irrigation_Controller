@@ -143,9 +143,9 @@ void updateTime(uint8_t hour, uint8_t minute, uint8_t second){
 }
 
 void updateWeather(uint8_t date){
-    main_screen_element_list[currently_active_date+5].element_ptr.button_ptr->color = DATE_BUTTON_DEACTIVE_COLOR;
+    main_screen_element_list[currently_active_date+DATE0_BUTTON].element_ptr.button_ptr->color = DATE_BUTTON_DEACTIVE_COLOR;
     currently_active_date = date;
-    main_screen_element_list[currently_active_date+5].element_ptr.button_ptr->color = DATE_BUTTON_ACTIVE_COLOR;
+    main_screen_element_list[currently_active_date+DATE0_BUTTON].element_ptr.button_ptr->color = DATE_BUTTON_ACTIVE_COLOR;
     displayDateWeather();
 }
 
@@ -204,6 +204,7 @@ void updateWeatherIcon(char* weather){
         uint16_t text_len = strlen(weather);
         uint16_t x_coordinate = WEATHER_ICON_X_COORDINATE + (WEATHER_ICON_WIDTH>>1) - text_len * CHAR_WIDTH_D2;
         uint16_t y_coordinate = WEATHER_ICON_Y_COORDINATE + (WEATHER_ICON_WIDTH>>1) - CHAR_HEIGHT_D2;
+        LCD_Text(x_coordinate, y_coordinate, weather, LCD_BLACK);
     }
 }
 
@@ -230,5 +231,67 @@ void drawIcon(const unsigned char* icon){
                 }
             }
         }
+    }
+}
+
+static MAIN_SCREEN_ELEMENT_INDEX_t detectPressedElement_main(uint16_t x, uint16_t y){
+    for(int i = 0; i < NUMBER_OF_MAIN_SCREEN_ELEMENTS; i++){
+        // Button
+        if(main_screen_element_list[i].type == BUTTON){
+            button_t* button_ptr = main_screen_element_list[i].element_ptr.button_ptr;
+            uint16_t min_x = button_ptr->x_coordinate;
+            uint16_t max_x = min_x + button_ptr->width;
+            uint16_t min_y = button_ptr->y_coordinate;
+            uint16_t max_y = min_y + button_ptr->height;
+            if(x >= min_x && x <= max_x && y >= min_y && y <= max_y){
+                return i;
+            }
+        }
+        // Text
+        else{
+            text_element_t* text_element_ptr = main_screen_element_list[i].element_ptr.text_element_ptr;
+            uint16_t min_x = text_element_ptr->x_coordinate;
+            uint16_t max_x = min_x + strlen(text_element_ptr->text_ptr) * text_element_ptr->size * CHAR_WIDTH;
+            uint16_t min_y = text_element_ptr->y_coordinate;
+            uint16_t max_y = min_y + text_element_ptr->size * CHAR_HEIGHT;
+            if(x >= min_x && x <= max_x && y >= min_y && y <= max_y){
+                return i;
+            }
+        }
+    }
+    return -1;
+}
+
+void mainScreenPressed(uint16_t x, uint16_t y){
+    MAIN_SCREEN_ELEMENT_INDEX_t element_index = detectPressedElement_main(x, y);
+    switch(element_index){
+    case SETTING_BUTTON:
+        break;
+    case WATERING_BUTTON:
+        break;
+    case SCHEDULE_BUTTON:
+        break;
+    case PLAN_BUTTON:
+        break;
+    case DATE0_BUTTON:
+    case DATE1_BUTTON:
+    case DATE2_BUTTON:
+    case DATE3_BUTTON:
+    case DATE4_BUTTON:
+    case DATE5_BUTTON:
+    case DATE6_BUTTON:
+        button_t* date_button_ptr = main_screen_element_list[currently_active_date + DATE0_BUTTON].element_ptr.button_ptr;
+        date_button_ptr->color = DATE_BUTTON_DEACTIVE_COLOR;
+        drawSingleElement(&main_screen_element_list[currently_active_date + DATE0_BUTTON]);
+
+        currently_active_date = element_index - DATE0_BUTTON;
+        date_button_ptr = main_screen_element_list[currently_active_date + DATE0_BUTTON].element_ptr.button_ptr;
+        date_button_ptr->color = DATE_BUTTON_ACTIVE_COLOR;
+        drawSingleElement(&main_screen_element_list[currently_active_date + DATE0_BUTTON]);
+
+        updateWeather(currently_active_date);
+        break;
+    default:
+        break;
     }
 }

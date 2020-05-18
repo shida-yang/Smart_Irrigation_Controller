@@ -76,7 +76,7 @@ void updateTimeout(uint8_t timeout);
 void updateTextElement(SETTING_SCREEN_ELEMENT_INDEX_t element_index, uint8_t value);
 void updateAutoButton(SETTING_SCREEN_ELEMENT_INDEX_t element_index, bool auto_on);
 
-static SETTING_SCREEN_ELEMENT_INDEX_t detectPressedElement(uint16_t x, uint16_t y);
+static SETTING_SCREEN_ELEMENT_INDEX_t detectPressedElement_setting(uint16_t x, uint16_t y);
 void settingScreenPressed(uint16_t x, uint16_t y);
 
 #endif

@@ -1,7 +1,10 @@
 #ifndef GUI_H
 #define GUI_H
 
-//#include "LCD_Button.h"
 #include "Main_Screen.h"
+#include "Setting_Screen.h"
+#include "Watering_Screen.h"
+#include "Schedule_Screen.h"
+#include "Plan_Screen.h"
 
 #endif

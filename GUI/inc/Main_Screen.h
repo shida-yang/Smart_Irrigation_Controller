@@ -15,7 +15,6 @@ typedef enum{
     TIME_TEXT,
     RAIN_SUM_TEXT,
     RAIN_TARGET_TEXT,
-    WATER_INDICATOR_BUTTON,
     DATE0_BUTTON,
     DATE1_BUTTON,
     DATE2_BUTTON,
@@ -67,7 +66,7 @@ typedef enum{
 #define DATE_BUTTON_HEIGHT           (CHAR_HEIGHT + (NAV_BAR_BUTTON_PADDING + 1) * 2)
 #define DATE_BUTTON_ACTIVE_COLOR     LCD_WHITE
 #define DATE_BUTTON_DEACTIVE_COLOR   LCD_LIGHT_GRAY
-#define DATE_BUTTON_LOWER_EDGE          (main_screen_element_list[DATE0_BUTTON].element_ptr.button_ptr->y_coordinate + main_screen_element_list[DATE0_BUTTON].element_ptr.button_ptr->height)
+#define DATE_BUTTON_LOWER_EDGE       (main_screen_element_list[DATE0_BUTTON].element_ptr.button_ptr->y_coordinate + main_screen_element_list[DATE0_BUTTON].element_ptr.button_ptr->height)
 
 #define WEATHER_ICON_WIDTH              64
 #define WEATHER_ICON_Y_COORDINATE       (((DATE_BUTTON_LOWER_EDGE+MAX_SCREEN_Y)>>1)-(WEATHER_ICON_WIDTH>>1))
@@ -102,7 +101,7 @@ void updateRainSumTartget(float rainSum, float rainTarget);
 void updateWeatherIcon(char* weather);
 void drawIcon(const unsigned char* icon);
 
-static MAIN_SCREEN_ELEMENT_INDEX_t detectPressedElement(uint16_t x, uint16_t y);
-void settingScreenPressed();
+static MAIN_SCREEN_ELEMENT_INDEX_t detectPressedElement_main(uint16_t x, uint16_t y);
+void mainScreenPressed(uint16_t x, uint16_t y);
 
 #endif
