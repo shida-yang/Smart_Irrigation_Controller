@@ -38,7 +38,7 @@ static void generateNavBarButtons(){
     back_to_main_button_ptr->x_coordinate = MIN_SCREEN_X + SCREEN_MARGIN;
 }
 
-void genetateTime(){
+static void genetateTime(){
     LCD_Text_size(SETTING_TIME_TEXT_X, SETTING_TIME_TEXT_Y, "Time  ", LCD_BLACK, SETTING_TIME_TEXT_SIZE);
 
     setting_screen_element_list[TIME_HOUR_TEXT].type = TEXT;
@@ -73,7 +73,7 @@ void genetateTime(){
     time_second_text_ptr->x_coordinate = SECOND_TEXT_X;
 }
 
-void generateBrightness(){
+static void generateBrightness(){
     LCD_Text_size(SETTING_BRIGHTNESS_TEXT_X, SETTING_BRIGHTNESS_TEXT_Y, "Brightness  ", LCD_BLACK, SETTING_BRIGHTNESS_TEXT_SIZE);
 
     setting_screen_element_list[BRIGHTNESS_INDEX_TEXT].type = TEXT;
@@ -86,7 +86,7 @@ void generateBrightness(){
     brightness_index_text_ptr->x_coordinate = BEIGHTNESS_TEXT_X;
 }
 
-void generateScreenTimeout(){
+static void generateScreenTimeout(){
     LCD_Text_size(SETTING_TIMEOUT_TEXT_X, SETTING_TIMEOUT_TEXT_Y_1, "LCD Screen", LCD_BLACK, SETTING_TIMEOUT_TEXT_SIZE);
     LCD_Text_size(SETTING_TIMEOUT_TEXT_X, SETTING_TIMEOUT_TEXT_Y_2, "Timeout", LCD_BLACK, SETTING_TIMEOUT_TEXT_SIZE);
 
@@ -100,7 +100,7 @@ void generateScreenTimeout(){
     screen_timeout_index_text_ptr->x_coordinate = TIMEOUT_INDEX_TEXT_X;
 }
 
-void generateAutoButtons(){
+static void generateAutoButtons(){
     setting_screen_element_list[TIME_AUTO_BUTTON].type = BUTTON;
     setting_screen_element_list[TIME_AUTO_BUTTON].element_ptr.button_ptr = &other_buttons[TIME_AUTO_BUTTON - TIME_AUTO_BUTTON];
     button_t* time_auto_button_ptr = setting_screen_element_list[TIME_AUTO_BUTTON].element_ptr.button_ptr;
@@ -120,7 +120,7 @@ void generateAutoButtons(){
     brightness_auto_button_ptr->x_coordinate = BRIGHTNESS_AUTO_BUTTON_X;
 }
 
-void generateUpDownButtons(){
+static void generateUpDownButtons(){
     setting_screen_element_list[DOWN_BUTTON].type = BUTTON;
     setting_screen_element_list[DOWN_BUTTON].element_ptr.button_ptr = &other_buttons[DOWN_BUTTON - TIME_AUTO_BUTTON];
     button_t* down_button_ptr = setting_screen_element_list[DOWN_BUTTON].element_ptr.button_ptr;
@@ -344,12 +344,40 @@ void settingScreenPressed(uint16_t x, uint16_t y){
         updateAutoButton(element_index, auto_button_state[element_index - TIME_AUTO_BUTTON]);
         break;
     case UP_BUTTON:
-        clickable_text_number[now_setting - TIME_HOUR_TEXT]++;
-        updateTextElement(now_setting, clickable_text_number[now_setting - TIME_HOUR_TEXT]);
+        if(now_setting == TIME_HOUR_TEXT || now_setting == TIME_MINUTE_TEXT || now_setting == TIME_SECOND_TEXT){
+            if(auto_button_state[TIME_AUTO_BUTTON - TIME_AUTO_BUTTON] == 0){
+                clickable_text_number[now_setting - TIME_HOUR_TEXT]++;
+                updateTextElement(now_setting, clickable_text_number[now_setting - TIME_HOUR_TEXT]);
+            }
+        }
+        else if(now_setting == BRIGHTNESS_INDEX_TEXT){
+            if(auto_button_state[BRIGHTNESS_AUTO_BUTTON - TIME_AUTO_BUTTON] == 0){
+                clickable_text_number[now_setting - TIME_HOUR_TEXT]++;
+                updateTextElement(now_setting, clickable_text_number[now_setting - TIME_HOUR_TEXT]);
+            }
+        }
+        else{
+            clickable_text_number[now_setting - TIME_HOUR_TEXT]++;
+            updateTextElement(now_setting, clickable_text_number[now_setting - TIME_HOUR_TEXT]);
+        }
         break;
     case DOWN_BUTTON:
-        clickable_text_number[now_setting - TIME_HOUR_TEXT]--;
-        updateTextElement(now_setting, clickable_text_number[now_setting - TIME_HOUR_TEXT]);
+        if(now_setting == TIME_HOUR_TEXT || now_setting == TIME_MINUTE_TEXT || now_setting == TIME_SECOND_TEXT){
+            if(auto_button_state[TIME_AUTO_BUTTON - TIME_AUTO_BUTTON] == 0){
+                clickable_text_number[now_setting - TIME_HOUR_TEXT]--;
+                updateTextElement(now_setting, clickable_text_number[now_setting - TIME_HOUR_TEXT]);
+            }
+        }
+        else if(now_setting == BRIGHTNESS_INDEX_TEXT){
+            if(auto_button_state[BRIGHTNESS_AUTO_BUTTON - TIME_AUTO_BUTTON] == 0){
+                clickable_text_number[now_setting - TIME_HOUR_TEXT]--;
+                updateTextElement(now_setting, clickable_text_number[now_setting - TIME_HOUR_TEXT]);
+            }
+        }
+        else{
+            clickable_text_number[now_setting - TIME_HOUR_TEXT]--;
+            updateTextElement(now_setting, clickable_text_number[now_setting - TIME_HOUR_TEXT]);
+        }
         break;
     default:
         break;

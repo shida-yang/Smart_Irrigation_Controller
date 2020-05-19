@@ -92,7 +92,6 @@ void generateRainSumTarget(){
 }
 
 void generateDateButtons(){
-    fillInWeekWeatherData();
     uint16_t current_x_coordinate = 4;
     for(int i = 0; i <= 6; i++){
         main_screen_element_list[i+DATE0_BUTTON].type = BUTTON;

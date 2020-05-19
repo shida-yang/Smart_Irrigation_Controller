@@ -62,11 +62,11 @@ typedef enum{
 #define UP_BUTTON_Y             (DOWN_BUTTON_Y - SCREEN_MARGIN * 4 - up_button_ptr->height)
 
 static void generateNavBarButtons();
-void genetateTime();
-void generateBrightness();
-void generateScreenTimeout();
-void generateAutoButtons();
-void generateUpDownButtons();
+static void genetateTime();
+static void generateBrightness();
+static void generateScreenTimeout();
+static void generateAutoButtons();
+static void generateUpDownButtons();
 void drawSettingScreen();
 void updateTimeHour(uint8_t hour);
 void updateTimeMinute(uint8_t minute);

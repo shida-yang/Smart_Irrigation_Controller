@@ -4,13 +4,86 @@
 #include "Screen_Template.h"
 
 typedef enum{
+    PLAN_BACK_TO_MAIN_BUTTON,
+    PLAN_DISCARD_BUTTON,
+    PLAN_SAVE_BUTTON,
+
+    PLAN1_BUTTON,
+    PLAN2_BUTTON,
+    PLAN3_BUTTON,
+    PLAN4_BUTTON,
+    PLAN5_BUTTON,
+    PLAN6_BUTTON,
+    PLAN7_BUTTON,
+    PLAN8_BUTTON,
+
+    ZOOM1_MINUTE,
+    ZOOM2_MINUTE,
+    ZOOM3_MINUTE,
+    ZOOM4_MINUTE,
+    ZOOM5_MINUTE,
+    ZOOM6_MINUTE,
+    ZOOM7_MINUTE,
+
+    ZOOM1_MINUTE_ACTIVE_BUTTON,
+    ZOOM2_MINUTE_ACTIVE_BUTTON,
+    ZOOM3_MINUTE_ACTIVE_BUTTON,
+    ZOOM4_MINUTE_ACTIVE_BUTTON,
+    ZOOM5_MINUTE_ACTIVE_BUTTON,
+    ZOOM6_MINUTE_ACTIVE_BUTTON,
+    ZOOM7_MINUTE_ACTIVE_BUTTON,
+
+    PLAN_DOWN_BUTTON,
+    PLAN_UP_BUTTON,
+
     NUMBER_OF_PLAN_SCREEN_ELEMENTS
 } PLAN_SCREEN_ELEMENT_INDEX_t;
 
 #define PLAN_SCREEN_BACKGROUND_COLOR        LCD_WHITE
 
-#define BACK_TO_MAIN_BUTTON_COLOR   LCD_BLUE
+#define PLAN_BACK_TO_MAIN_BUTTON_COLOR      LCD_BLUE
+#define DISCARD_BUTTON_COLOR        LCD_RED
+#define SAVE_BUTTON_COLOR           LCD_GREEN
 
+#define ZOOM_ACTIVE_BUTTON_COLOR        LCD_GREEN
+#define ZOOM_DEACTIVE_BUTTON_COLOR      LCD_RED
+#define ZOOM_ACTIVE_BUTTON_STR          " Active "
+#define ZOOM_DEACTIVE_BUTTON_STR        "Inactive"
 
+#define SELECTED_TEXT       LCD_GREEN
+#define NORMAL_TEXT         LCD_BLACK
+
+#define PLAN_NUMBER_BUTTON_Y                (NAV_BAR_HEIGHT + SCREEN_MARGIN)
+#define PLAN_NUMBER_BUTTON_WIDTH            35
+#define PLAN_NUMBER_BUTTON_HEIGHT           (CHAR_HEIGHT + (NAV_BAR_BUTTON_PADDING + 1) * 2)
+#define PLAN_NUMBER_BUTTON_ACTIVE_COLOR     LCD_WHITE
+#define PLAN_NUMBER_BUTTON_DEACTIVE_COLOR   LCD_LIGHT_GRAY
+#define PLAN_NUMBER_BUTTON_LOWER_EDGE       (PLAN_NUMBER_BUTTON_Y + PLAN_NUMBER_BUTTON_HEIGHT)
+
+#define MINUTE_TO_ACTIVE_BUTTON_INDEX_OFFSET    (ZOOM1_MINUTE_ACTIVE_BUTTON - ZOOM1_MINUTE)
+#define ZONE_TEXT_SIZE          1
+#define ZONE_TEXT_X             SCREEN_MARGIN
+#define ZONE_MINUTE_NUMBER_X    (ZONE_TEXT_X + CHAR_WIDTH * 8 * ZONE_TEXT_SIZE)
+#define ZONE_MINUTE_TEXT_X      (ZONE_MINUTE_NUMBER_X + CHAR_WIDTH * 3 * ZONE_TEXT_SIZE)
+#define ZONE_ACTIVE_BUTTON_X    (ZONE_MINUTE_TEXT_X + CHAR_WIDTH * 9 * ZONE_TEXT_SIZE)
+#define ZONE_INIT_Y             (PLAN_NUMBER_BUTTON_LOWER_EDGE + SCREEN_MARGIN * 2)
+
+#define UP_DOWN_BUTTON_PADDING  5
+#define UP_DOWN_BUTTON_COLOR    LCD_YELLOW
+#define DOWN_BUTTON_X           (MAX_SCREEN_X - SCREEN_MARGIN * 4 - down_button_ptr->width)
+#define DOWN_BUTTON_Y           (MAX_SCREEN_Y - SCREEN_MARGIN * 4 - down_button_ptr->height)
+#define UP_BUTTON_X             DOWN_BUTTON_X
+#define UP_BUTTON_Y             (DOWN_BUTTON_Y - SCREEN_MARGIN * 4 - up_button_ptr->height)
+
+static void generateNavBarButtons();
+static void generatePlanButtons();
+static void generateZoneLines();
+static void generateUpDownButtons();
+void drawPlanScreen();
+static void updateMinuteNumber(PLAN_SCREEN_ELEMENT_INDEX_t element_index, uint8_t value);
+static void updateZoneActivateButtons(PLAN_SCREEN_ELEMENT_INDEX_t element_index, bool is_active);
+
+static PLAN_SCREEN_ELEMENT_INDEX_t detectPressedElement_plan(uint16_t x, uint16_t y);
+void planScreenPressed(uint16_t x, uint16_t y);
 
 #endif

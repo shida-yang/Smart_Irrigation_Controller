@@ -22,7 +22,7 @@ void BGT_WaitForTap(){
         Point p;
         p=TP_ReadXY();
 
-        mainScreenPressed(p.x, p.y);
+        settingScreenPressed(p.x, p.y);
     }
     P4->IFG &= (~BIT0);
     P4->IE |= BIT0;
@@ -36,25 +36,28 @@ void main(void)
 
     G8RTOS_InitSemaphore(&SPI_MUTEX, 1);
 
-    drawMainScreen();
+    fillInWeekWeatherData();
 
-    updateRainSumTartget(5.87951, 91.56482);
+//    drawMainScreen();
+//
+//    updateRainSumTartget(5.87951, 91.56482);
+//
+//    struct tm ts;
+//
+//    while(1){
+//        getCurrentTime(&ts);
+//        P4->IE &= (~BIT0);
+//        updateDate(ts.tm_mon+1, ts.tm_mday, ts.tm_year%100, ts.tm_wday);
+//        updateTime(ts.tm_hour, ts.tm_min, ts.tm_sec);
+//        P4->IE |= BIT0;
+//        DelayMs(4000);
+//    }
 
-    struct tm ts;
-
-    while(1){
-        getCurrentTime(&ts);
-        P4->IE &= (~BIT0);
-        updateDate(ts.tm_mon+1, ts.tm_mday, ts.tm_year%100, ts.tm_wday);
-        updateTime(ts.tm_hour, ts.tm_min, ts.tm_sec);
-        P4->IE |= BIT0;
-        DelayMs(4000);
-    }
 
 
+    drawSettingScreen();
 
-//    drawSettingScreen();
-
+//    drawPlanScreen();
 
     while(1);
 }
