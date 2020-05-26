@@ -7,7 +7,7 @@ static text_element_t clickable_texts[5];
 static char clickable_texts_str[5][4];
 static uint8_t clickable_text_number[5];
 static bool auto_button_state[2];
-static SETTING_SCREEN_ELEMENT_INDEX_t now_setting=TIME_SECOND_TEXT;
+static SETTING_SCREEN_ELEMENT_INDEX_t now_setting;
 
 static void generateNavBarButtons(){
     setting_screen_element_list[SAVE_BUTTON].type = BUTTON;
@@ -141,6 +141,7 @@ static void generateUpDownButtons(){
 }
 
 void drawSettingScreen(){
+    now_setting = -1;
     LCD_Clear(LCD_WHITE);
     generateNavBarButtons();
     genetateTime();
@@ -309,9 +310,11 @@ void settingScreenPressed(uint16_t x, uint16_t y){
     case TIME_MINUTE_TEXT:
     case TIME_SECOND_TEXT:
         if(auto_button_state[TIME_AUTO_BUTTON - TIME_AUTO_BUTTON] == 0){
-            // Deactivate old element
-            setting_screen_element_list[now_setting].element_ptr.text_element_ptr->color = NORMAL_TEXT;
-            updateTextElement(now_setting, clickable_text_number[now_setting - TIME_HOUR_TEXT]);
+            if((int8_t)now_setting >= 0){
+                // Deactivate old element
+                setting_screen_element_list[now_setting].element_ptr.text_element_ptr->color = NORMAL_TEXT;
+                updateTextElement(now_setting, clickable_text_number[now_setting - TIME_HOUR_TEXT]);
+            }
             // Activate new element
             now_setting = element_index;
             setting_screen_element_list[now_setting].element_ptr.text_element_ptr->color = SELECTED_TEXT;
@@ -320,9 +323,11 @@ void settingScreenPressed(uint16_t x, uint16_t y){
         break;
     case BRIGHTNESS_INDEX_TEXT:
         if(auto_button_state[BRIGHTNESS_AUTO_BUTTON - TIME_AUTO_BUTTON] == 0){
-            // Deactivate old element
-            setting_screen_element_list[now_setting].element_ptr.text_element_ptr->color = NORMAL_TEXT;
-            updateTextElement(now_setting, clickable_text_number[now_setting - TIME_HOUR_TEXT]);
+            if((int8_t)now_setting >= 0){
+                // Deactivate old element
+                setting_screen_element_list[now_setting].element_ptr.text_element_ptr->color = NORMAL_TEXT;
+                updateTextElement(now_setting, clickable_text_number[now_setting - TIME_HOUR_TEXT]);
+            }
             // Activate new element
             now_setting = element_index;
             setting_screen_element_list[now_setting].element_ptr.text_element_ptr->color = SELECTED_TEXT;
@@ -330,9 +335,11 @@ void settingScreenPressed(uint16_t x, uint16_t y){
         }
         break;
     case SCREEN_TIMEOUT_INDEX_TEXT:
-        // Deactivate old element
-        setting_screen_element_list[now_setting].element_ptr.text_element_ptr->color = NORMAL_TEXT;
-        updateTextElement(now_setting, clickable_text_number[now_setting - TIME_HOUR_TEXT]);
+        if((int8_t)now_setting >= 0){
+            // Deactivate old element
+            setting_screen_element_list[now_setting].element_ptr.text_element_ptr->color = NORMAL_TEXT;
+            updateTextElement(now_setting, clickable_text_number[now_setting - TIME_HOUR_TEXT]);
+        }
         // Activate new element
         now_setting = element_index;
         setting_screen_element_list[now_setting].element_ptr.text_element_ptr->color = SELECTED_TEXT;
@@ -344,39 +351,43 @@ void settingScreenPressed(uint16_t x, uint16_t y){
         updateAutoButton(element_index, auto_button_state[element_index - TIME_AUTO_BUTTON]);
         break;
     case UP_BUTTON:
-        if(now_setting == TIME_HOUR_TEXT || now_setting == TIME_MINUTE_TEXT || now_setting == TIME_SECOND_TEXT){
-            if(auto_button_state[TIME_AUTO_BUTTON - TIME_AUTO_BUTTON] == 0){
+        if((int8_t)now_setting >= 0){
+            if(now_setting == TIME_HOUR_TEXT || now_setting == TIME_MINUTE_TEXT || now_setting == TIME_SECOND_TEXT){
+                if(auto_button_state[TIME_AUTO_BUTTON - TIME_AUTO_BUTTON] == 0){
+                    clickable_text_number[now_setting - TIME_HOUR_TEXT]++;
+                    updateTextElement(now_setting, clickable_text_number[now_setting - TIME_HOUR_TEXT]);
+                }
+            }
+            else if(now_setting == BRIGHTNESS_INDEX_TEXT){
+                if(auto_button_state[BRIGHTNESS_AUTO_BUTTON - TIME_AUTO_BUTTON] == 0){
+                    clickable_text_number[now_setting - TIME_HOUR_TEXT]++;
+                    updateTextElement(now_setting, clickable_text_number[now_setting - TIME_HOUR_TEXT]);
+                }
+            }
+            else{
                 clickable_text_number[now_setting - TIME_HOUR_TEXT]++;
                 updateTextElement(now_setting, clickable_text_number[now_setting - TIME_HOUR_TEXT]);
             }
-        }
-        else if(now_setting == BRIGHTNESS_INDEX_TEXT){
-            if(auto_button_state[BRIGHTNESS_AUTO_BUTTON - TIME_AUTO_BUTTON] == 0){
-                clickable_text_number[now_setting - TIME_HOUR_TEXT]++;
-                updateTextElement(now_setting, clickable_text_number[now_setting - TIME_HOUR_TEXT]);
-            }
-        }
-        else{
-            clickable_text_number[now_setting - TIME_HOUR_TEXT]++;
-            updateTextElement(now_setting, clickable_text_number[now_setting - TIME_HOUR_TEXT]);
         }
         break;
     case DOWN_BUTTON:
-        if(now_setting == TIME_HOUR_TEXT || now_setting == TIME_MINUTE_TEXT || now_setting == TIME_SECOND_TEXT){
-            if(auto_button_state[TIME_AUTO_BUTTON - TIME_AUTO_BUTTON] == 0){
+        if((int8_t)now_setting >= 0){
+            if(now_setting == TIME_HOUR_TEXT || now_setting == TIME_MINUTE_TEXT || now_setting == TIME_SECOND_TEXT){
+                if(auto_button_state[TIME_AUTO_BUTTON - TIME_AUTO_BUTTON] == 0){
+                    clickable_text_number[now_setting - TIME_HOUR_TEXT]--;
+                    updateTextElement(now_setting, clickable_text_number[now_setting - TIME_HOUR_TEXT]);
+                }
+            }
+            else if(now_setting == BRIGHTNESS_INDEX_TEXT){
+                if(auto_button_state[BRIGHTNESS_AUTO_BUTTON - TIME_AUTO_BUTTON] == 0){
+                    clickable_text_number[now_setting - TIME_HOUR_TEXT]--;
+                    updateTextElement(now_setting, clickable_text_number[now_setting - TIME_HOUR_TEXT]);
+                }
+            }
+            else{
                 clickable_text_number[now_setting - TIME_HOUR_TEXT]--;
                 updateTextElement(now_setting, clickable_text_number[now_setting - TIME_HOUR_TEXT]);
             }
-        }
-        else if(now_setting == BRIGHTNESS_INDEX_TEXT){
-            if(auto_button_state[BRIGHTNESS_AUTO_BUTTON - TIME_AUTO_BUTTON] == 0){
-                clickable_text_number[now_setting - TIME_HOUR_TEXT]--;
-                updateTextElement(now_setting, clickable_text_number[now_setting - TIME_HOUR_TEXT]);
-            }
-        }
-        else{
-            clickable_text_number[now_setting - TIME_HOUR_TEXT]--;
-            updateTextElement(now_setting, clickable_text_number[now_setting - TIME_HOUR_TEXT]);
         }
         break;
     default:

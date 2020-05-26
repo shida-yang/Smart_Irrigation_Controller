@@ -22,7 +22,7 @@ void BGT_WaitForTap(){
         Point p;
         p=TP_ReadXY();
 
-        settingScreenPressed(p.x, p.y);
+        wateringScreenPressed(p.x, p.y);
     }
     P4->IFG &= (~BIT0);
     P4->IE |= BIT0;
@@ -55,9 +55,11 @@ void main(void)
 
 
 
-    drawSettingScreen();
+//    drawSettingScreen();
 
 //    drawPlanScreen();
+
+    drawWateringScreen();
 
     while(1);
 }

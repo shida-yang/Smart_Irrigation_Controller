@@ -26,7 +26,7 @@ static void generateNavBarButtons(){
     main_screen_element_list[WATERING_BUTTON].type = BUTTON;
     main_screen_element_list[WATERING_BUTTON].element_ptr.button_ptr = &watering_button;
     button_t* watering_button_ptr = main_screen_element_list[WATERING_BUTTON].element_ptr.button_ptr;
-    watering_button_ptr->color = WATERING_BUTTON_COLOR;
+    watering_button_ptr->color = WATERING_BUTTON_COLOR_INACTIVE;
     strcpy(watering_button_ptr->text, "Watering");
     adjustButtonSizeBasedOnText(watering_button_ptr, NAV_BAR_BUTTON_PADDING);
     watering_button_ptr->y_coordinate = SCREEN_MARGIN;
