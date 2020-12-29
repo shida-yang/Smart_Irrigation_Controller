@@ -22,6 +22,9 @@ void BGT_WaitForTap(){
         Point p;
         p=TP_ReadXY();
 
+//        mainScreenPressed(p.x, p.y);
+//        settingScreenPressed(p.x, p.y);
+//        planScreenPressed(p.x, p.y);
         wateringScreenPressed(p.x, p.y);
     }
     P4->IFG &= (~BIT0);
@@ -36,8 +39,8 @@ void main(void)
 
     G8RTOS_InitSemaphore(&SPI_MUTEX, 1);
 
-    fillInWeekWeatherData();
-
+//    fillInWeekWeatherData();
+//
 //    drawMainScreen();
 //
 //    updateRainSumTartget(5.87951, 91.56482);
