@@ -2,23 +2,24 @@
 
 * Note: Must add #define __TI_TIME_USES_64 1 to time.h to make epoch correct.
 * Current functionality:
-    * Correctly fetches weather data from [OpenWeatherMap](https://openweathermap.org/api)
-    * Correctly sychronizes time with [WorldTimeAPI](https://worldtimeapi.org/timezones)
-    * All GUI pages finished except for the scheduling page
-    * Buttons inside GUI pages are functional
-    * Homepage displays weather data with corresponding icons
+   * Correctly fetches weather data from [OpenWeatherMap](https://openweathermap.org/api)
+   * Correctly sychronizes time with [WorldTimeAPI](https://worldtimeapi.org/timezones)
+   * All GUI pages finished except for the scheduling page
+   * Buttons inside GUI pages are functional
+   * Homepage displays weather data with corresponding icons
 * Tasks left:
-    * Program navigaiton bar buttons to switch between GUI pages
-    * Configure GPIO (or use a shift register) to control irrigation switch relays
-    * Store user configuration in flash
+   * Implement scheduling page
+   * Program navigaiton bar buttons to switch between GUI pages
+   * Configure GPIO (or use a shift register) to control irrigation switch relays
+   * Store user configuration in flash
 
 ## Finished GUI Pages
 ### Home
 * Displays the current time
 * Displays the current weather and the weather forecast in the next few days
-* ![home1](https://github.com/shida-yang/Smart_Irrigation_Controller/blob/master/GUI_Demos/home1.jpg)
-* ![home2](https://github.com/shida-yang/Smart_Irrigation_Controller/blob/master/GUI_Demos/home2.jpg)
-* ![home3](https://github.com/shida-yang/Smart_Irrigation_Controller/blob/master/GUI_Demos/home3.jpg)
+* <img src="https://github.com/shida-yang/Smart_Irrigation_Controller/blob/master/GUI_Demos/home1.jpg" width="500" />
+* <img src="https://github.com/shida-yang/Smart_Irrigation_Controller/blob/master/GUI_Demos/home2.jpg" width="500" />
+* <img src="https://github.com/shida-yang/Smart_Irrigation_Controller/blob/master/GUI_Demos/home3.jpg" width="500" />
 ### Setting
 * Controls some basic settings like time synchronization, brightness, and screen timeout
 * When AUTO is selected, the time/brightness will be controlled by program, and user cannot change the setting
