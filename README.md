@@ -7,8 +7,8 @@
    * All GUI pages finished except for the scheduling page
    * Buttons inside GUI pages are functional
    * Homepage displays weather data with corresponding icons
+   * Schedule page sets the day and time of watering
 * Tasks left:
-   * Implement scheduling page
    * Program navigaiton bar buttons to switch between GUI pages
    * Configure GPIO (or use a shift register) to control irrigation switch relays
    * Store user configuration in flash
@@ -38,4 +38,4 @@
 ### Scheduling
 * This page controls which days of a week the user wants to irrigate (the real irrigation decision will incorporate this setting and the weather data)
 * The irrigation time for each zoom will be controlled by the selected plan
-* To be implemented
+* <img src="https://github.com/shida-yang/Smart_Irrigation_Controller/blob/master/GUI_Demos/schedule.jpg" width="500" />

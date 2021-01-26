@@ -25,7 +25,8 @@ void BGT_WaitForTap(){
 //        mainScreenPressed(p.x, p.y);
 //        settingScreenPressed(p.x, p.y);
 //        planScreenPressed(p.x, p.y);
-        wateringScreenPressed(p.x, p.y);
+//        wateringScreenPressed(p.x, p.y);
+        scheduleScreenPressed(p.x, p.y);
     }
     P4->IFG &= (~BIT0);
     P4->IE |= BIT0;
@@ -62,7 +63,9 @@ void main(void)
 
 //    drawPlanScreen();
 
-    drawWateringScreen();
+//    drawWateringScreen();
+
+    drawScheduleScreen();
 
     while(1);
 }

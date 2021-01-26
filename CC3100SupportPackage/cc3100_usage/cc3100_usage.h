@@ -49,10 +49,10 @@ typedef enum
 /*
  * Static IP address for host
  */
-#define CONFIG_IP       SL_IPV4_VAL(192,168,254,123)       /* Static IP to be configured */
+#define CONFIG_IP       SL_IPV4_VAL(192,168,1,123)       /* Static IP to be configured */
 #define AP_MASK         SL_IPV4_VAL(255,255,255,0)      /* Subnet Mask for the station */
-#define AP_GATEWAY      SL_IPV4_VAL(192,168,254,254)        /* Default Gateway address */
-#define AP_DNS          SL_IPV4_VAL(192,168,254,254)            /* DNS Server Address */
+#define AP_GATEWAY      SL_IPV4_VAL(192,168,1,1)        /* Default Gateway address */
+#define AP_DNS          SL_IPV4_VAL(192,168,1,1)            /* DNS Server Address */
 #define SL_STOP_TIMEOUT        0xFF
 
 /* Application specific status/error codes */
